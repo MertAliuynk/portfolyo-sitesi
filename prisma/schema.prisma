@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model Project {
+    id          String   @id @default(cuid())
+    slug        String   @unique
+    title       String
+    summary     String
+    description String
+    tags        String
+    gradient    String
+    liveUrl     String?
+    repoUrl     String?
+    year        Int
+    featured    Boolean  @default(false)
+    order       Int      @default(0)
+    createdAt   DateTime @default(now())
+
+    @@index([slug])
+}
+
+model Post {
+    id          String   @id @default(cuid())
+    slug        String   @unique
+    title       String
+    excerpt     String
+    content     String
+    tag         String
+    readingTime Int
+    published   Boolean  @default(true)
+    publishedAt DateTime @default(now())
+    createdAt   DateTime @default(now())
+
+    @@index([slug])
+}

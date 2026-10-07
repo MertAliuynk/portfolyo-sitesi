@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: var(--font-space-grotesk), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+
+  /* one family per mood — the next/font variables live on <html> */
+  --font-pop: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--font-caveat), cursive;
+  --font-editorial: var(--font-instrument-serif), Georgia, serif;
+  --font-swiss: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-plex: var(--font-plex-mono), ui-monospace, monospace;
+  --font-soft: var(--font-fraunces), Georgia, serif;
+  --font-dos: var(--font-vt323), ui-monospace, monospace;
+  --font-win: Tahoma, Verdana, "Segoe UI", sans-serif;
+
+  --color-ink: #05040d;
+  --color-ink-soft: #0e0a1f;
+  --color-ink-line: #241c3f;
+  --color-paper: #f6f3ff;
+
+  --color-magenta: #ff2fd0;
+  --color-violet: #7c3aed;
+  --color-cyan: #22d3ee;
+  --color-orange: #fb923c;
+  --color-yellow: #facc15;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 10s ease-in-out infinite;
+  --animate-blink: blink 1s step-end infinite;
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+  --animate-pulse-glow: pulse-glow 2.4s ease-in-out infinite;
+}
+
+@layer base {
+  * {
+    @apply border-ink-line;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background: var(--color-ink);
+  }
+
+  body {
+    @apply bg-ink text-paper antialiased;
+    background: radial-gradient(
+        60rem 40rem at 15% -10%,
+        color-mix(in oklab, var(--color-violet) 22%, transparent),
+        transparent
+      ),
+      radial-gradient(
+        50rem 35rem at 110% 10%,
+        color-mix(in oklab, var(--color-magenta) 18%, transparent),
+        transparent
+      ),
+      var(--color-ink);
+  }
+
+  ::selection {
+    background: var(--color-magenta);
+    color: var(--color-ink);
+  }
+
+  /* Slim, themed scrollbar instead of hiding it entirely (keep it usable) */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      var(--color-magenta),
+      var(--color-violet)
+    );
+    border-radius: 999px;
+    border: 2px solid var(--color-ink);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      95deg,
+      var(--color-magenta),
+      var(--color-violet) 45%,
+      var(--color-cyan)
+    );
+  }
+
+  .text-gradient-warm {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      95deg,
+      var(--color-yellow),
+      var(--color-orange) 55%,
+      var(--color-magenta)
+    );
+  }
+
+  .glass-panel {
+    @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+  }
+
+  .noise-overlay {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+/* ---- Nostaljik: classic 3D bevels, drawn the way Win98 did it ---- */
+@layer components {
+  .w98-raised {
+    background: #c0c0c0;
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #ffffff,
+      inset -2px -2px #808080,
+      inset 2px 2px #dfdfdf;
+  }
+  .w98-window {
+    background: #c0c0c0;
+    padding: 3px;
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #dfdfdf,
+      inset -2px -2px #808080,
+      inset 2px 2px #ffffff;
+  }
+  .w98-sunken {
+    box-shadow:
+      inset -1px -1px #ffffff,
+      inset 1px 1px #0a0a0a,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #808080;
+  }
+  .w98-field {
+    background: #ffffff;
+    box-shadow:
+      inset -1px -1px #ffffff,
+      inset 1px 1px #808080,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #0a0a0a;
+  }
+  .w98-btn {
+    background: #c0c0c0;
+    min-width: 75px;
+    padding: 4px 12px;
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #ffffff,
+      inset -2px -2px #808080,
+      inset 2px 2px #dfdfdf;
+  }
+  .w98-btn:active:not(:disabled),
+  .w98-btn[data-pressed="true"] {
+    padding: 5px 11px 3px 13px;
+    box-shadow:
+      inset -1px -1px #ffffff,
+      inset 1px 1px #0a0a0a,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #808080;
+  }
+  .w98-btn[data-pressed="true"] {
+    background-color: #dcdcdc;
+    background-image: repeating-conic-gradient(#c0c0c0 0% 25%, #ffffff 0% 50%);
+    background-size: 2px 2px;
+  }
+  .w98-btn:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: -5px;
+  }
+  .w98-title {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: #ffffff;
+  }
+  .w98-title[data-inactive="true"] {
+    background: linear-gradient(90deg, #808080, #b5b5b5);
+    color: #dfdfdf;
+  }
+  .w98-ctrl {
+    background: #c0c0c0;
+    width: 16px;
+    height: 14px;
+    display: grid;
+    place-items: center;
+    box-shadow:
+      inset -1px -1px #0a0a0a,
+      inset 1px 1px #ffffff,
+      inset -2px -2px #808080,
+      inset 2px 2px #dfdfdf;
+  }
+  .w98-ctrl:active {
+    box-shadow:
+      inset -1px -1px #ffffff,
+      inset 1px 1px #0a0a0a,
+      inset -2px -2px #dfdfdf,
+      inset 2px 2px #808080;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(3deg);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-magenta) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 16px transparent;
+  }
+}
