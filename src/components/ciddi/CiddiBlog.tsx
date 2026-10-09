@@ -3,17 +3,12 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import type { Components } from "react-markdown";
 
 import { EASE, Header, Reveal, Rule } from "~/components/ciddi/kit";
-import { MarkdownContent } from "~/components/markdown/MarkdownContent";
-import {
-  headingsOf,
-  neighbours,
-  slugify,
-  textOf,
-  type PostView,
-} from "~/lib/posts";
+import { ciddiRich } from "~/components/ciddi/rich";
+import { neighbours, type PostView } from "~/lib/posts";
+import { headingsOf } from "~/lib/rich/extract";
+import { RichRenderer } from "~/lib/rich/render";
 import { SITE } from "~/lib/site";
 import { cn } from "~/lib/utils";
 
@@ -166,57 +161,6 @@ export function CiddiBlogList({ posts }: { posts: PostView[] }) {
 
 /* ------------------------------------------------------------------ */
 
-const md: Components = {
-  h2: ({ children }) => (
-    <h2
-      id={slugify(textOf(children))}
-      className="mt-16 mb-6 scroll-mt-24 border-t border-[#111] pt-4 font-editorial text-[2.4rem] leading-[1.05] [counter-increment:h2] before:mb-3 before:block before:font-plex before:text-[11px] before:tracking-[0.08em] before:text-[#6B6B6B] before:content-['§_'_counter(h2,decimal-leading-zero)]"
-    >
-      {children}
-    </h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className="mt-10 mb-3 font-swiss text-[18px] font-semibold">{children}</h3>
-  ),
-  p: ({ children }) => (
-    <p className="mb-6 font-swiss text-[18px] leading-[1.7] text-[#222]">{children}</p>
-  ),
-  strong: ({ children }) => <strong className="font-semibold text-[#111]">{children}</strong>,
-  ul: ({ children }) => (
-    <ul className="mb-6 space-y-2 font-swiss text-[18px] leading-[1.6] text-[#222] [&>li]:relative [&>li]:pl-7 [&>li]:before:absolute [&>li]:before:left-0 [&>li]:before:text-[#E5381F] [&>li]:before:content-['—']">
-      {children}
-    </ul>
-  ),
-  ol: ({ children }) => (
-    <ol className="mb-6 space-y-4 font-swiss text-[18px] leading-[1.6] text-[#222] [counter-reset:li] [&>li]:relative [&>li]:pl-10 [&>li]:[counter-increment:li] [&>li]:before:absolute [&>li]:before:top-[0.35em] [&>li]:before:left-0 [&>li]:before:font-plex [&>li]:before:text-[12px] [&>li]:before:text-[#6B6B6B] [&>li]:before:content-[counter(li,decimal-leading-zero)]">
-      {children}
-    </ol>
-  ),
-  li: ({ children }) => <li>{children}</li>,
-  code: ({ children }) => (
-    <code className="bg-[#E6E2DA] px-1 py-0.5 font-plex text-[0.82em]">{children}</code>
-  ),
-  pre: ({ children }) => (
-    <pre className="my-8 overflow-x-auto border-y border-[#111] bg-[#ECE9E3] px-5 py-5 font-plex text-[13px] leading-[1.65] [&_code]:bg-transparent [&_code]:p-0">
-      {children}
-    </pre>
-  ),
-  a: ({ children, href }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="border-b border-[#111]/40 hover:border-[#E5381F] hover:text-[#E5381F]"
-    >
-      {children}
-    </a>
-  ),
-  blockquote: ({ children }) => (
-    <blockquote className="my-10 border-l-2 border-[#E5381F] pl-6 font-editorial text-[1.75rem] leading-[1.25] italic [&_p]:mb-0 [&_p]:font-editorial [&_p]:text-[1.75rem] [&_p]:leading-[1.25] [&_p]:text-[#111]">
-      {children}
-    </blockquote>
-  ),
-};
 
 function useActiveHeading(ids: string[]) {
   const [active, setActive] = useState(ids[0] ?? "");
@@ -248,7 +192,7 @@ export function CiddiPost({
   posts: PostView[];
 }) {
   const { scrollYProgress } = useScroll();
-  const headings = useMemo(() => headingsOf(post.content), [post.content]);
+  const headings = useMemo(() => headingsOf(post.doc), [post.doc]);
   const ids = useMemo(() => headings.map((h) => h.id), [headings]);
   const active = useActiveHeading(ids);
   const { prev, next } = neighbours(posts, post.slug);
@@ -284,6 +228,11 @@ export function CiddiPost({
             {post.excerpt}
           </p>
         </Reveal>
+
+        {post.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={post.coverImage} alt="" className="mt-12 max-h-[70vh] w-full border border-[#111]/15 object-cover" />
+        )}
 
         <div className="mt-14">
           <Rule />
@@ -345,7 +294,7 @@ export function CiddiPost({
           </aside>
 
           <article className="col-span-12 [counter-reset:h2] lg:col-span-7 lg:col-start-5 [&>div>p:first-child]:text-[21px] [&>div>p:first-child]:leading-[1.6]">
-            <MarkdownContent content={post.content} components={md} />
+            <RichRenderer doc={post.doc} components={ciddiRich} />
 
             <div className="mt-16 border-t border-[#111] pt-4 font-swiss text-[15px] text-[#4A4A4A]">
               Bu yazı hakkında bir görüşün varsa:{" "}

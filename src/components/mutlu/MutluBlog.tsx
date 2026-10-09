@@ -3,9 +3,7 @@
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import type { Components } from "react-markdown";
 
-import { MarkdownContent } from "~/components/markdown/MarkdownContent";
 import {
   burst,
   CARD_COLORS,
@@ -14,7 +12,9 @@ import {
   Nav,
 } from "~/components/mutlu/kit";
 import { Smiley, Squiggle, Star } from "~/components/mutlu/shapes";
+import { mutluRich } from "~/components/mutlu/rich";
 import { neighbours, type PostView } from "~/lib/posts";
+import { RichRenderer } from "~/lib/rich/render";
 import { SITE } from "~/lib/site";
 import { cn } from "~/lib/utils";
 
@@ -90,7 +90,7 @@ export function MutluPostTeasers({ posts }: { posts: PostView[] }) {
 
 /* ------------------------------------------------------------------ */
 
-function Shell({ children }: { children: React.ReactNode }) {
+export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative min-h-screen overflow-x-clip bg-[#FFF1D6] text-[#1A1A1A]">
       <div
@@ -143,60 +143,6 @@ export function MutluBlogList({ posts }: { posts: PostView[] }) {
 
 /* ------------------------------------------------------------------ */
 
-const md: Components = {
-  h2: ({ children }) => (
-    <h2 className="mt-12 mb-5 font-pop text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl">
-      <span className="bg-[linear-gradient(transparent_58%,#FFC93C_58%)] box-decoration-clone px-1">
-        {children}
-      </span>
-    </h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className="mt-8 mb-3 font-pop text-2xl font-extrabold">{children}</h3>
-  ),
-  p: ({ children }) => (
-    <p className="mb-5 text-[18px] leading-[1.75] font-medium">{children}</p>
-  ),
-  strong: ({ children }) => (
-    <strong className="rounded bg-[#FF8AD8]/45 px-1 font-extrabold">{children}</strong>
-  ),
-  ul: ({ children }) => (
-    <ul className="mb-6 space-y-2.5 text-[18px] font-medium [&>li]:relative [&>li]:pl-8 [&>li]:before:absolute [&>li]:before:left-0 [&>li]:before:font-pop [&>li]:before:text-[#FF5A36] [&>li]:before:content-['★']">
-      {children}
-    </ul>
-  ),
-  ol: ({ children }) => (
-    <ol className="mb-6 space-y-3 text-[18px] font-medium [counter-reset:n] [&>li]:relative [&>li]:pl-11 [&>li]:[counter-increment:n] [&>li]:before:absolute [&>li]:before:top-0 [&>li]:before:left-0 [&>li]:before:grid [&>li]:before:h-8 [&>li]:before:w-8 [&>li]:before:place-items-center [&>li]:before:rounded-full [&>li]:before:border-[3px] [&>li]:before:border-[#1A1A1A] [&>li]:before:bg-[#4D9FFF] [&>li]:before:font-pop [&>li]:before:text-sm [&>li]:before:font-extrabold [&>li]:before:content-[counter(n)]">
-      {children}
-    </ol>
-  ),
-  li: ({ children }) => <li>{children}</li>,
-  code: ({ children }) => (
-    <code className="rounded-md border-2 border-[#1A1A1A] bg-[#FFC2EC] px-1.5 py-0.5 font-mono text-[0.85em] font-bold">
-      {children}
-    </code>
-  ),
-  pre: ({ children }) => (
-    <pre className="my-8 overflow-x-auto rounded-2xl border-[3px] border-[#1A1A1A] bg-[#1A1A1A] p-5 font-mono text-sm leading-relaxed text-[#FFF1D6] shadow-[6px_6px_0_#FF5A36] [&_code]:border-0 [&_code]:bg-transparent [&_code]:p-0 [&_code]:font-normal">
-      {children}
-    </pre>
-  ),
-  a: ({ children, href }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="font-bold underline decoration-[#FF5A36] decoration-wavy decoration-2 underline-offset-4"
-    >
-      {children}
-    </a>
-  ),
-  blockquote: ({ children }) => (
-    <blockquote className="my-8 -rotate-1 border-[3px] border-[#1A1A1A] bg-[#FFE27A] p-5 font-hand text-3xl leading-tight shadow-[5px_5px_0_#1A1A1A] [&_p]:mb-0 [&_p]:font-hand [&_p]:text-3xl [&_p]:leading-tight">
-      {children}
-    </blockquote>
-  ),
-};
 
 function Clap() {
   const [claps, setClaps] = useState(0);
@@ -280,9 +226,18 @@ export function MutluPost({
           <p className="mt-5 text-lg font-semibold opacity-80">{post.excerpt}</p>
         </motion.header>
 
+        {post.coverImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={post.coverImage}
+            alt=""
+            className="mt-10 w-full rotate-1 rounded-[28px] border-[3px] border-[#1A1A1A] shadow-[8px_8px_0_#1A1A1A]"
+          />
+        )}
+
         <div className="relative mt-12 rounded-[32px] border-[3px] border-[#1A1A1A] bg-[#FFF8EA] p-6 shadow-[8px_8px_0_#1A1A1A] sm:p-12">
           <Star fill="#FFC93C" className="absolute -top-8 -right-6 w-16 rotate-12" />
-          <MarkdownContent content={post.content} components={md} />
+          <RichRenderer doc={post.doc} components={mutluRich} />
         </div>
 
         <div className="mt-16">

@@ -103,7 +103,13 @@ exports.Prisma.ProjectScalarFieldEnum = {
   year: 'year',
   featured: 'featured',
   order: 'order',
-  createdAt: 'createdAt'
+  role: 'role',
+  duration: 'duration',
+  status: 'status',
+  coverImage: 'coverImage',
+  contentJson: 'contentJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PostScalarFieldEnum = {
@@ -112,11 +118,15 @@ exports.Prisma.PostScalarFieldEnum = {
   title: 'title',
   excerpt: 'excerpt',
   content: 'content',
+  contentJson: 'contentJson',
+  format: 'format',
+  coverImage: 'coverImage',
   tag: 'tag',
   readingTime: 'readingTime',
   published: 'published',
   publishedAt: 'publishedAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -173,7 +183,6 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -182,13 +191,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Project {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  summary     String\n  description String\n  tags        String\n  gradient    String\n  liveUrl     String?\n  repoUrl     String?\n  year        Int\n  featured    Boolean  @default(false)\n  order       Int      @default(0)\n  createdAt   DateTime @default(now())\n\n  @@index([slug])\n}\n\nmodel Post {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  excerpt     String\n  content     String\n  tag         String\n  readingTime Int\n  published   Boolean  @default(true)\n  publishedAt DateTime @default(now())\n  createdAt   DateTime @default(now())\n\n  @@index([slug])\n}\n",
-  "inlineSchemaHash": "6689bdbd670b1e673a037c4f20463da7dffb6855433639eff49f71d0f6c4bc64",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Project {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  summary     String\n  description String\n  tags        String\n  gradient    String\n  liveUrl     String?\n  repoUrl     String?\n  year        Int\n  featured    Boolean  @default(false)\n  order       Int      @default(0)\n  /// case-study details, edited from the admin panel\n  role        String?\n  duration    String?\n  status      String?\n  coverImage  String?\n  /// rich case study body (TipTap JSON)\n  contentJson String?\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@index([slug])\n}\n\nmodel Post {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  excerpt     String\n  /// legacy markdown body; posts written in the admin editor use contentJson\n  content     String   @default(\"\")\n  /// TipTap JSON document\n  contentJson String?\n  /// \"markdown\" for seeded posts, \"rich\" for editor posts\n  format      String   @default(\"markdown\")\n  coverImage  String?\n  tag         String\n  readingTime Int\n  published   Boolean  @default(true)\n  publishedAt DateTime @default(now())\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@index([slug])\n}\n",
+  "inlineSchemaHash": "d60f9d663e2de86108167b4647ba240df4b9ff9a288a4d1223369bbdc3ce81b3",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Project\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gradient\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"liveUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"repoUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"year\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"featured\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"excerpt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tag\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"readingTime\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"publishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Project\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gradient\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"liveUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"repoUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"year\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"featured\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"duration\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"coverImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentJson\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"excerpt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contentJson\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"format\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"coverImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tag\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"readingTime\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"publishedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

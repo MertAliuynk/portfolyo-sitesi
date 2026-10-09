@@ -266,7 +266,13 @@ function WorkRow({ project, index }: { project: Project; index: number }) {
                   Teknoloji
                 </p>
                 <p className="mt-2">{tags.join(", ")}</p>
-                <div className="mt-6 flex gap-6 font-plex text-[12px] uppercase">
+                <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 font-plex text-[12px] uppercase">
+                  <Link
+                    href={`/ciddi/projeler/${project.slug}`}
+                    className="border-b border-[#E5381F] text-[#E5381F] hover:border-[#111] hover:text-[#111]"
+                  >
+                    Vaka çalışması →
+                  </Link>
                   {project.liveUrl && (
                     <a
                       href={project.liveUrl}

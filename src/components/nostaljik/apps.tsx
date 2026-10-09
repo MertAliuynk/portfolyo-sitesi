@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   BinIcon,
@@ -14,7 +14,10 @@ import {
   NotepadIcon,
   SnakeIcon,
 } from "~/components/nostaljik/icons";
+import { w98Rich } from "~/components/nostaljik/rich";
 import { MenuBar } from "~/components/nostaljik/Window";
+import { projectDoc, toProjectView } from "~/lib/projects";
+import { RichRenderer } from "~/lib/rich/render";
 import { SITE } from "~/lib/site";
 import { cn } from "~/lib/utils";
 import type { RouterOutputs } from "~/trpc/react";
@@ -391,35 +394,85 @@ export function ProjectApp({
   project: Project;
   onClose: () => void;
 }) {
-  const [name, subtitle] = project.title.split("—").map((s) => s.trim());
+  const view = useMemo(() => toProjectView(project), [project]);
+  const [tab, setTab] = useState(0);
+  const tabs = ["Genel", "Vaka çalışması"];
+
   return (
-    <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-3">
-      <div className="flex items-center gap-3">
-        <DocIcon className="h-8 w-8 shrink-0" />
-        <span className="w98-field flex-1 px-2 py-1 font-bold">{name}</span>
+    <div className="flex min-h-0 flex-1 flex-col p-2">
+      <div className="flex gap-0 pl-1">
+        {tabs.map((t, i) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTab(i)}
+            className={cn(
+              "relative -mb-[2px] border-x border-t border-x-[#808080] border-t-white bg-[#c0c0c0] px-3 shadow-[inset_1px_1px_#dfdfdf,1px_0_0_#0a0a0a]",
+              tab === i ? "z-10 -mt-[2px] pt-[5px] pb-[5px]" : "pt-[3px] pb-[2px]",
+            )}
+          >
+            {t}
+          </button>
+        ))}
       </div>
-      <hr className="border-t-[#808080] border-b-white" />
-      <dl className="grid grid-cols-[6.5rem_1fr] gap-x-2 gap-y-1.5">
-        <dt>Tür:</dt>
-        <dd>{subtitle ?? "Proje"}</dd>
-        <dt>Konum:</dt>
-        <dd>C:\Belgelerim\Projelerim</dd>
-        <dt>Oluşturulma:</dt>
-        <dd>{project.year}</dd>
-        <dt>Teknolojiler:</dt>
-        <dd>{project.tags.split(",").join(", ")}</dd>
-      </dl>
-      <hr className="border-t-[#808080] border-b-white" />
-      <p className="leading-relaxed">{project.summary}</p>
-      <p className="leading-relaxed text-[#202020]">{project.description}</p>
-      <div className="mt-auto flex flex-wrap justify-end gap-2 pt-2">
-        {project.liveUrl && (
-          <a href={project.liveUrl} target="_blank" rel="noreferrer" className="w98-btn text-center">
+      <div className="w98-raised flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-3">
+        {tab === 0 ? (
+          <>
+            <div className="flex items-center gap-3">
+              <DocIcon className="h-8 w-8 shrink-0" />
+              <span className="w98-field flex-1 px-2 py-1 font-bold">{view.name}</span>
+            </div>
+            <hr className="border-t-[#808080] border-b-white" />
+            <dl className="grid grid-cols-[6.5rem_1fr] gap-x-2 gap-y-1.5">
+              <dt>Tür:</dt>
+              <dd>{view.subtitle ?? "Proje"}</dd>
+              <dt>Oluşturulma:</dt>
+              <dd>{view.year}</dd>
+              {view.role && (
+                <>
+                  <dt>Rol:</dt>
+                  <dd>{view.role}</dd>
+                </>
+              )}
+              {view.duration && (
+                <>
+                  <dt>Süre:</dt>
+                  <dd>{view.duration}</dd>
+                </>
+              )}
+              {view.status && (
+                <>
+                  <dt>Durum:</dt>
+                  <dd>{view.status}</dd>
+                </>
+              )}
+              <dt>Teknolojiler:</dt>
+              <dd>{view.tags.join(", ")}</dd>
+            </dl>
+            <hr className="border-t-[#808080] border-b-white" />
+            <p className="leading-relaxed">{view.summary}</p>
+            <p>
+              Ayrıntılar için <b>Vaka çalışması</b> sekmesine bak.
+            </p>
+          </>
+        ) : (
+          <div className="w98-field min-h-0 flex-1 overflow-y-auto bg-white p-4">
+            {view.coverImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={view.coverImage} alt="" className="mb-4 max-w-full border-2 border-[#808080]" />
+            )}
+            <RichRenderer doc={projectDoc(view)} components={w98Rich} />
+          </div>
+        )}
+      </div>
+      <div className="flex flex-wrap justify-end gap-2 pt-2">
+        {view.liveUrl && (
+          <a href={view.liveUrl} target="_blank" rel="noreferrer" className="w98-btn text-center">
             Canlı sürüm
           </a>
         )}
-        {project.repoUrl && (
-          <a href={project.repoUrl} target="_blank" rel="noreferrer" className="w98-btn text-center">
+        {view.repoUrl && (
+          <a href={view.repoUrl} target="_blank" rel="noreferrer" className="w98-btn text-center">
             Kaynak kod
           </a>
         )}

@@ -131,7 +131,13 @@ exports.Prisma.ProjectScalarFieldEnum = {
   year: 'year',
   featured: 'featured',
   order: 'order',
-  createdAt: 'createdAt'
+  role: 'role',
+  duration: 'duration',
+  status: 'status',
+  coverImage: 'coverImage',
+  contentJson: 'contentJson',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.PostScalarFieldEnum = {
@@ -140,11 +146,15 @@ exports.Prisma.PostScalarFieldEnum = {
   title: 'title',
   excerpt: 'excerpt',
   content: 'content',
+  contentJson: 'contentJson',
+  format: 'format',
+  coverImage: 'coverImage',
   tag: 'tag',
   readingTime: 'readingTime',
   published: 'published',
   publishedAt: 'publishedAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {

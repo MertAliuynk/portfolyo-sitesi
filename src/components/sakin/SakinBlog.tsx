@@ -3,18 +3,18 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Components } from "react-markdown";
 
-import { MarkdownContent } from "~/components/markdown/MarkdownContent";
 import { SLOW, soft, TopBar } from "~/components/sakin/SakinExperience";
+import { sakinRich } from "~/components/sakin/rich";
 import { neighbours, type PostView } from "~/lib/posts";
+import { RichRenderer } from "~/lib/rich/render";
 import { SITE } from "~/lib/site";
 import { cn } from "~/lib/utils";
 
 const SIZES = ["1.1rem", "1.25rem", "1.45rem"];
 const SIZE_KEY = "mert:sakin-size";
 
-function Shell({ children }: { children: React.ReactNode }) {
+export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative min-h-screen overflow-x-clip bg-[#ECE5D8] text-[#2F3A2F]">
       <div
@@ -121,60 +121,7 @@ export function SakinBlogList({ posts }: { posts: PostView[] }) {
 
 /* ------------------------------------------------------------------ */
 
-const body = cn("mb-7 font-soft leading-[1.85] font-[350]", soft);
 
-const md: Components = {
-  h2: ({ children }) => (
-    <h2 className={cn("mt-16 mb-6 text-center font-soft text-[1.9rem] leading-tight font-light italic", soft)}>
-      <span aria-hidden className="mb-6 block text-base tracking-[1em] not-italic opacity-30">
-        · · ·
-      </span>
-      {children}
-    </h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className={cn("mt-10 mb-4 font-soft text-[1.35rem] italic", soft)}>{children}</h3>
-  ),
-  p: ({ children }) => <p className={body}>{children}</p>,
-  strong: ({ children }) => <strong className="font-medium">{children}</strong>,
-  em: ({ children }) => <em className="italic">{children}</em>,
-  ul: ({ children }) => (
-    <ul className={cn(body, "space-y-3 [&>li]:relative [&>li]:pl-7 [&>li]:before:absolute [&>li]:before:top-[0.85em] [&>li]:before:left-0 [&>li]:before:h-1.5 [&>li]:before:w-1.5 [&>li]:before:rounded-full [&>li]:before:bg-[#8A9A7B] [&>li]:before:content-['']")}>
-      {children}
-    </ul>
-  ),
-  ol: ({ children }) => (
-    <ol className={cn(body, "list-decimal space-y-4 pl-6 marker:font-light marker:italic marker:opacity-50")}>
-      {children}
-    </ol>
-  ),
-  li: ({ children }) => <li className="pl-1">{children}</li>,
-  code: ({ children }) => (
-    <code className="rounded bg-[#2F3A2F]/[0.07] px-1.5 py-0.5 font-mono text-[0.8em]">
-      {children}
-    </code>
-  ),
-  pre: ({ children }) => (
-    <pre className="my-10 overflow-x-auto rounded-2xl bg-[#2F3A2F]/[0.06] p-6 font-mono text-[0.75em] leading-[1.65] [&_code]:bg-transparent [&_code]:p-0">
-      {children}
-    </pre>
-  ),
-  a: ({ children, href }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="border-b border-current/30 transition-colors hover:border-current"
-    >
-      {children}
-    </a>
-  ),
-  blockquote: ({ children }) => (
-    <blockquote className={cn("my-12 text-center font-soft text-[1.6rem] leading-[1.45] font-light italic [&_p]:mb-0 [&_p]:text-[1.6rem] [&_p]:leading-[1.45]", soft)}>
-      {children}
-    </blockquote>
-  ),
-};
 
 export function SakinPost({
   post,
@@ -263,6 +210,17 @@ export function SakinPost({
           </p>
         </motion.header>
 
+        {post.coverImage && (
+          <motion.img
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2.4, delay: 0.6 }}
+            src={post.coverImage}
+            alt=""
+            className="mt-16 w-full rounded-[2rem]"
+          />
+        )}
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -274,7 +232,7 @@ export function SakinPost({
             "[&>div>p:first-child]:first-letter:float-left [&>div>p:first-child]:first-letter:mt-[0.12em] [&>div>p:first-child]:first-letter:mr-3 [&>div>p:first-child]:first-letter:font-soft [&>div>p:first-child]:first-letter:text-[4.2em] [&>div>p:first-child]:first-letter:leading-[0.8] [&>div>p:first-child]:first-letter:font-light [&>div>p:first-child]:first-letter:italic [&>div>p:first-child]:first-letter:text-[#6E8060]",
           )}
         >
-          <MarkdownContent content={post.content} components={md} />
+          <RichRenderer doc={post.doc} components={sakinRich} />
         </motion.div>
 
         <motion.div

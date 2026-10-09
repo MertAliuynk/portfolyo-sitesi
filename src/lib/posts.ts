@@ -1,15 +1,36 @@
-import { isValidElement, type ReactNode } from "react";
+import { docFrom } from "~/lib/rich/extract";
+import type { RichNode } from "~/lib/rich/types";
 
-/** A post as the mood pages receive it — dates pre-formatted on the server. */
+/**
+ * A post as the mood pages receive it — dates pre-formatted and the body
+ * already parsed into a render tree on the server.
+ */
 export interface PostView {
   slug: string;
   title: string;
   excerpt: string;
-  content: string;
+  doc: RichNode;
+  coverImage: string | null;
   tag: string;
   readingTime: number;
   date: string;
   dateLong: string;
+}
+
+export function formatDate(d: Date) {
+  return new Intl.DateTimeFormat("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(d);
+}
+
+export function formatDateLong(d: Date) {
+  return new Intl.DateTimeFormat("tr-TR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(d);
 }
 
 export function toPostView(p: {
@@ -17,6 +38,9 @@ export function toPostView(p: {
   title: string;
   excerpt: string;
   content: string;
+  contentJson?: string | null;
+  format?: string | null;
+  coverImage?: string | null;
   tag: string;
   readingTime: number;
   publishedAt: Date;
@@ -25,54 +49,13 @@ export function toPostView(p: {
     slug: p.slug,
     title: p.title,
     excerpt: p.excerpt,
-    content: p.content,
+    doc: docFrom(p),
+    coverImage: p.coverImage ?? null,
     tag: p.tag,
     readingTime: p.readingTime,
-    date: new Intl.DateTimeFormat("tr-TR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }).format(p.publishedAt),
-    dateLong: new Intl.DateTimeFormat("tr-TR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(p.publishedAt),
+    date: formatDate(p.publishedAt),
+    dateLong: formatDateLong(p.publishedAt),
   };
-}
-
-export function slugify(text: string) {
-  return text
-    .toLocaleLowerCase("tr-TR")
-    .replace(/ı/g, "i")
-    .replace(/ş/g, "s")
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-/** `## Heading` lines of a markdown body, for tables of contents. */
-export function headingsOf(content: string) {
-  return content
-    .split("\n")
-    .filter((line) => line.startsWith("## "))
-    .map((line) => {
-      const text = line.slice(3).replace(/[*`]/g, "").trim();
-      return { text, id: slugify(text) };
-    });
-}
-
-/** Plain text of rendered markdown children (for heading ids). */
-export function textOf(node: ReactNode): string {
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(textOf).join("");
-  if (isValidElement<{ children?: ReactNode }>(node)) {
-    return textOf(node.props.children);
-  }
-  return "";
 }
 
 /** Previous (newer) and next (older) neighbours in a list. */

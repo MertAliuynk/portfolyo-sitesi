@@ -13,6 +13,9 @@ export const postRouter = createTRPCRouter({
   bySlug: publicProcedure
     .input(z.object({ slug: z.string() }))
     .query(async ({ ctx, input }) => {
-      return ctx.db.post.findUnique({ where: { slug: input.slug } });
+      // drafts stay private until published from the admin panel
+      return ctx.db.post.findFirst({
+        where: { slug: input.slug, published: true },
+      });
     }),
 });

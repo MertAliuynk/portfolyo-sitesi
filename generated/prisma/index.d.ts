@@ -987,7 +987,13 @@ export namespace Prisma {
     year: number | null
     featured: boolean | null
     order: number | null
+    role: string | null
+    duration: string | null
+    status: string | null
+    coverImage: string | null
+    contentJson: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProjectMaxAggregateOutputType = {
@@ -1003,7 +1009,13 @@ export namespace Prisma {
     year: number | null
     featured: boolean | null
     order: number | null
+    role: string | null
+    duration: string | null
+    status: string | null
+    coverImage: string | null
+    contentJson: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProjectCountAggregateOutputType = {
@@ -1019,7 +1031,13 @@ export namespace Prisma {
     year: number
     featured: number
     order: number
+    role: number
+    duration: number
+    status: number
+    coverImage: number
+    contentJson: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -1047,7 +1065,13 @@ export namespace Prisma {
     year?: true
     featured?: true
     order?: true
+    role?: true
+    duration?: true
+    status?: true
+    coverImage?: true
+    contentJson?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ProjectMaxAggregateInputType = {
@@ -1063,7 +1087,13 @@ export namespace Prisma {
     year?: true
     featured?: true
     order?: true
+    role?: true
+    duration?: true
+    status?: true
+    coverImage?: true
+    contentJson?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type ProjectCountAggregateInputType = {
@@ -1079,7 +1109,13 @@ export namespace Prisma {
     year?: true
     featured?: true
     order?: true
+    role?: true
+    duration?: true
+    status?: true
+    coverImage?: true
+    contentJson?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1182,7 +1218,13 @@ export namespace Prisma {
     year: number
     featured: boolean
     order: number
+    role: string | null
+    duration: string | null
+    status: string | null
+    coverImage: string | null
+    contentJson: string | null
     createdAt: Date
+    updatedAt: Date
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
     _sum: ProjectSumAggregateOutputType | null
@@ -1217,7 +1259,13 @@ export namespace Prisma {
     year?: boolean
     featured?: boolean
     order?: boolean
+    role?: boolean
+    duration?: boolean
+    status?: boolean
+    coverImage?: boolean
+    contentJson?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["project"]>
 
   export type ProjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1233,7 +1281,13 @@ export namespace Prisma {
     year?: boolean
     featured?: boolean
     order?: boolean
+    role?: boolean
+    duration?: boolean
+    status?: boolean
+    coverImage?: boolean
+    contentJson?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["project"]>
 
   export type ProjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1249,7 +1303,13 @@ export namespace Prisma {
     year?: boolean
     featured?: boolean
     order?: boolean
+    role?: boolean
+    duration?: boolean
+    status?: boolean
+    coverImage?: boolean
+    contentJson?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["project"]>
 
   export type ProjectSelectScalar = {
@@ -1265,10 +1325,16 @@ export namespace Prisma {
     year?: boolean
     featured?: boolean
     order?: boolean
+    role?: boolean
+    duration?: boolean
+    status?: boolean
+    coverImage?: boolean
+    contentJson?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "summary" | "description" | "tags" | "gradient" | "liveUrl" | "repoUrl" | "year" | "featured" | "order" | "createdAt", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "summary" | "description" | "tags" | "gradient" | "liveUrl" | "repoUrl" | "year" | "featured" | "order" | "role" | "duration" | "status" | "coverImage" | "contentJson" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Project"
@@ -1286,7 +1352,19 @@ export namespace Prisma {
       year: number
       featured: boolean
       order: number
+      /**
+       * case-study details, edited from the admin panel
+       */
+      role: string | null
+      duration: string | null
+      status: string | null
+      coverImage: string | null
+      /**
+       * rich case study body (TipTap JSON)
+       */
+      contentJson: string | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -1722,7 +1800,13 @@ export namespace Prisma {
     readonly year: FieldRef<"Project", 'Int'>
     readonly featured: FieldRef<"Project", 'Boolean'>
     readonly order: FieldRef<"Project", 'Int'>
+    readonly role: FieldRef<"Project", 'String'>
+    readonly duration: FieldRef<"Project", 'String'>
+    readonly status: FieldRef<"Project", 'String'>
+    readonly coverImage: FieldRef<"Project", 'String'>
+    readonly contentJson: FieldRef<"Project", 'String'>
     readonly createdAt: FieldRef<"Project", 'DateTime'>
+    readonly updatedAt: FieldRef<"Project", 'DateTime'>
   }
     
 
@@ -2113,11 +2197,15 @@ export namespace Prisma {
     title: string | null
     excerpt: string | null
     content: string | null
+    contentJson: string | null
+    format: string | null
+    coverImage: string | null
     tag: string | null
     readingTime: number | null
     published: boolean | null
     publishedAt: Date | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type PostMaxAggregateOutputType = {
@@ -2126,11 +2214,15 @@ export namespace Prisma {
     title: string | null
     excerpt: string | null
     content: string | null
+    contentJson: string | null
+    format: string | null
+    coverImage: string | null
     tag: string | null
     readingTime: number | null
     published: boolean | null
     publishedAt: Date | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type PostCountAggregateOutputType = {
@@ -2139,11 +2231,15 @@ export namespace Prisma {
     title: number
     excerpt: number
     content: number
+    contentJson: number
+    format: number
+    coverImage: number
     tag: number
     readingTime: number
     published: number
     publishedAt: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -2162,11 +2258,15 @@ export namespace Prisma {
     title?: true
     excerpt?: true
     content?: true
+    contentJson?: true
+    format?: true
+    coverImage?: true
     tag?: true
     readingTime?: true
     published?: true
     publishedAt?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type PostMaxAggregateInputType = {
@@ -2175,11 +2275,15 @@ export namespace Prisma {
     title?: true
     excerpt?: true
     content?: true
+    contentJson?: true
+    format?: true
+    coverImage?: true
     tag?: true
     readingTime?: true
     published?: true
     publishedAt?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type PostCountAggregateInputType = {
@@ -2188,11 +2292,15 @@ export namespace Prisma {
     title?: true
     excerpt?: true
     content?: true
+    contentJson?: true
+    format?: true
+    coverImage?: true
     tag?: true
     readingTime?: true
     published?: true
     publishedAt?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -2288,11 +2396,15 @@ export namespace Prisma {
     title: string
     excerpt: string
     content: string
+    contentJson: string | null
+    format: string
+    coverImage: string | null
     tag: string
     readingTime: number
     published: boolean
     publishedAt: Date
     createdAt: Date
+    updatedAt: Date
     _count: PostCountAggregateOutputType | null
     _avg: PostAvgAggregateOutputType | null
     _sum: PostSumAggregateOutputType | null
@@ -2320,11 +2432,15 @@ export namespace Prisma {
     title?: boolean
     excerpt?: boolean
     content?: boolean
+    contentJson?: boolean
+    format?: boolean
+    coverImage?: boolean
     tag?: boolean
     readingTime?: boolean
     published?: boolean
     publishedAt?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2333,11 +2449,15 @@ export namespace Prisma {
     title?: boolean
     excerpt?: boolean
     content?: boolean
+    contentJson?: boolean
+    format?: boolean
+    coverImage?: boolean
     tag?: boolean
     readingTime?: boolean
     published?: boolean
     publishedAt?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2346,11 +2466,15 @@ export namespace Prisma {
     title?: boolean
     excerpt?: boolean
     content?: boolean
+    contentJson?: boolean
+    format?: boolean
+    coverImage?: boolean
     tag?: boolean
     readingTime?: boolean
     published?: boolean
     publishedAt?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["post"]>
 
   export type PostSelectScalar = {
@@ -2359,14 +2483,18 @@ export namespace Prisma {
     title?: boolean
     excerpt?: boolean
     content?: boolean
+    contentJson?: boolean
+    format?: boolean
+    coverImage?: boolean
     tag?: boolean
     readingTime?: boolean
     published?: boolean
     publishedAt?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "excerpt" | "content" | "tag" | "readingTime" | "published" | "publishedAt" | "createdAt", ExtArgs["result"]["post"]>
+  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "excerpt" | "content" | "contentJson" | "format" | "coverImage" | "tag" | "readingTime" | "published" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["post"]>
 
   export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Post"
@@ -2376,12 +2504,25 @@ export namespace Prisma {
       slug: string
       title: string
       excerpt: string
+      /**
+       * legacy markdown body; posts written in the admin editor use contentJson
+       */
       content: string
+      /**
+       * TipTap JSON document
+       */
+      contentJson: string | null
+      /**
+       * "markdown" for seeded posts, "rich" for editor posts
+       */
+      format: string
+      coverImage: string | null
       tag: string
       readingTime: number
       published: boolean
       publishedAt: Date
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["post"]>
     composites: {}
   }
@@ -2810,11 +2951,15 @@ export namespace Prisma {
     readonly title: FieldRef<"Post", 'String'>
     readonly excerpt: FieldRef<"Post", 'String'>
     readonly content: FieldRef<"Post", 'String'>
+    readonly contentJson: FieldRef<"Post", 'String'>
+    readonly format: FieldRef<"Post", 'String'>
+    readonly coverImage: FieldRef<"Post", 'String'>
     readonly tag: FieldRef<"Post", 'String'>
     readonly readingTime: FieldRef<"Post", 'Int'>
     readonly published: FieldRef<"Post", 'Boolean'>
     readonly publishedAt: FieldRef<"Post", 'DateTime'>
     readonly createdAt: FieldRef<"Post", 'DateTime'>
+    readonly updatedAt: FieldRef<"Post", 'DateTime'>
   }
     
 
@@ -3203,7 +3348,13 @@ export namespace Prisma {
     year: 'year',
     featured: 'featured',
     order: 'order',
-    createdAt: 'createdAt'
+    role: 'role',
+    duration: 'duration',
+    status: 'status',
+    coverImage: 'coverImage',
+    contentJson: 'contentJson',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -3215,11 +3366,15 @@ export namespace Prisma {
     title: 'title',
     excerpt: 'excerpt',
     content: 'content',
+    contentJson: 'contentJson',
+    format: 'format',
+    coverImage: 'coverImage',
     tag: 'tag',
     readingTime: 'readingTime',
     published: 'published',
     publishedAt: 'publishedAt',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
@@ -3300,7 +3455,13 @@ export namespace Prisma {
     year?: IntFilter<"Project"> | number
     featured?: BoolFilter<"Project"> | boolean
     order?: IntFilter<"Project"> | number
+    role?: StringNullableFilter<"Project"> | string | null
+    duration?: StringNullableFilter<"Project"> | string | null
+    status?: StringNullableFilter<"Project"> | string | null
+    coverImage?: StringNullableFilter<"Project"> | string | null
+    contentJson?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -3316,7 +3477,13 @@ export namespace Prisma {
     year?: SortOrder
     featured?: SortOrder
     order?: SortOrder
+    role?: SortOrderInput | SortOrder
+    duration?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    coverImage?: SortOrderInput | SortOrder
+    contentJson?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -3335,7 +3502,13 @@ export namespace Prisma {
     year?: IntFilter<"Project"> | number
     featured?: BoolFilter<"Project"> | boolean
     order?: IntFilter<"Project"> | number
+    role?: StringNullableFilter<"Project"> | string | null
+    duration?: StringNullableFilter<"Project"> | string | null
+    status?: StringNullableFilter<"Project"> | string | null
+    coverImage?: StringNullableFilter<"Project"> | string | null
+    contentJson?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
   }, "id" | "slug">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -3351,7 +3524,13 @@ export namespace Prisma {
     year?: SortOrder
     featured?: SortOrder
     order?: SortOrder
+    role?: SortOrderInput | SortOrder
+    duration?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    coverImage?: SortOrderInput | SortOrder
+    contentJson?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -3375,7 +3554,13 @@ export namespace Prisma {
     year?: IntWithAggregatesFilter<"Project"> | number
     featured?: BoolWithAggregatesFilter<"Project"> | boolean
     order?: IntWithAggregatesFilter<"Project"> | number
+    role?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    duration?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    status?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    coverImage?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    contentJson?: StringNullableWithAggregatesFilter<"Project"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
 
   export type PostWhereInput = {
@@ -3387,11 +3572,15 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     excerpt?: StringFilter<"Post"> | string
     content?: StringFilter<"Post"> | string
+    contentJson?: StringNullableFilter<"Post"> | string | null
+    format?: StringFilter<"Post"> | string
+    coverImage?: StringNullableFilter<"Post"> | string | null
     tag?: StringFilter<"Post"> | string
     readingTime?: IntFilter<"Post"> | number
     published?: BoolFilter<"Post"> | boolean
     publishedAt?: DateTimeFilter<"Post"> | Date | string
     createdAt?: DateTimeFilter<"Post"> | Date | string
+    updatedAt?: DateTimeFilter<"Post"> | Date | string
   }
 
   export type PostOrderByWithRelationInput = {
@@ -3400,11 +3589,15 @@ export namespace Prisma {
     title?: SortOrder
     excerpt?: SortOrder
     content?: SortOrder
+    contentJson?: SortOrderInput | SortOrder
+    format?: SortOrder
+    coverImage?: SortOrderInput | SortOrder
     tag?: SortOrder
     readingTime?: SortOrder
     published?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PostWhereUniqueInput = Prisma.AtLeast<{
@@ -3416,11 +3609,15 @@ export namespace Prisma {
     title?: StringFilter<"Post"> | string
     excerpt?: StringFilter<"Post"> | string
     content?: StringFilter<"Post"> | string
+    contentJson?: StringNullableFilter<"Post"> | string | null
+    format?: StringFilter<"Post"> | string
+    coverImage?: StringNullableFilter<"Post"> | string | null
     tag?: StringFilter<"Post"> | string
     readingTime?: IntFilter<"Post"> | number
     published?: BoolFilter<"Post"> | boolean
     publishedAt?: DateTimeFilter<"Post"> | Date | string
     createdAt?: DateTimeFilter<"Post"> | Date | string
+    updatedAt?: DateTimeFilter<"Post"> | Date | string
   }, "id" | "slug">
 
   export type PostOrderByWithAggregationInput = {
@@ -3429,11 +3626,15 @@ export namespace Prisma {
     title?: SortOrder
     excerpt?: SortOrder
     content?: SortOrder
+    contentJson?: SortOrderInput | SortOrder
+    format?: SortOrder
+    coverImage?: SortOrderInput | SortOrder
     tag?: SortOrder
     readingTime?: SortOrder
     published?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: PostCountOrderByAggregateInput
     _avg?: PostAvgOrderByAggregateInput
     _max?: PostMaxOrderByAggregateInput
@@ -3450,11 +3651,15 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Post"> | string
     excerpt?: StringWithAggregatesFilter<"Post"> | string
     content?: StringWithAggregatesFilter<"Post"> | string
+    contentJson?: StringNullableWithAggregatesFilter<"Post"> | string | null
+    format?: StringWithAggregatesFilter<"Post"> | string
+    coverImage?: StringNullableWithAggregatesFilter<"Post"> | string | null
     tag?: StringWithAggregatesFilter<"Post"> | string
     readingTime?: IntWithAggregatesFilter<"Post"> | number
     published?: BoolWithAggregatesFilter<"Post"> | boolean
     publishedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Post"> | Date | string
   }
 
   export type ProjectCreateInput = {
@@ -3470,7 +3675,13 @@ export namespace Prisma {
     year: number
     featured?: boolean
     order?: number
+    role?: string | null
+    duration?: string | null
+    status?: string | null
+    coverImage?: string | null
+    contentJson?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -3486,7 +3697,13 @@ export namespace Prisma {
     year: number
     featured?: boolean
     order?: number
+    role?: string | null
+    duration?: string | null
+    status?: string | null
+    coverImage?: string | null
+    contentJson?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectUpdateInput = {
@@ -3502,7 +3719,13 @@ export namespace Prisma {
     year?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -3518,7 +3741,13 @@ export namespace Prisma {
     year?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectCreateManyInput = {
@@ -3534,7 +3763,13 @@ export namespace Prisma {
     year: number
     featured?: boolean
     order?: number
+    role?: string | null
+    duration?: string | null
+    status?: string | null
+    coverImage?: string | null
+    contentJson?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectUpdateManyMutationInput = {
@@ -3550,7 +3785,13 @@ export namespace Prisma {
     year?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectUncheckedUpdateManyInput = {
@@ -3566,7 +3807,13 @@ export namespace Prisma {
     year?: IntFieldUpdateOperationsInput | number
     featured?: BoolFieldUpdateOperationsInput | boolean
     order?: IntFieldUpdateOperationsInput | number
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostCreateInput = {
@@ -3574,12 +3821,16 @@ export namespace Prisma {
     slug: string
     title: string
     excerpt: string
-    content: string
+    content?: string
+    contentJson?: string | null
+    format?: string
+    coverImage?: string | null
     tag: string
     readingTime: number
     published?: boolean
     publishedAt?: Date | string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PostUncheckedCreateInput = {
@@ -3587,12 +3838,16 @@ export namespace Prisma {
     slug: string
     title: string
     excerpt: string
-    content: string
+    content?: string
+    contentJson?: string | null
+    format?: string
+    coverImage?: string | null
     tag: string
     readingTime: number
     published?: boolean
     publishedAt?: Date | string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PostUpdateInput = {
@@ -3601,11 +3856,15 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     excerpt?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     tag?: StringFieldUpdateOperationsInput | string
     readingTime?: IntFieldUpdateOperationsInput | number
     published?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostUncheckedUpdateInput = {
@@ -3614,11 +3873,15 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     excerpt?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     tag?: StringFieldUpdateOperationsInput | string
     readingTime?: IntFieldUpdateOperationsInput | number
     published?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostCreateManyInput = {
@@ -3626,12 +3889,16 @@ export namespace Prisma {
     slug: string
     title: string
     excerpt: string
-    content: string
+    content?: string
+    contentJson?: string | null
+    format?: string
+    coverImage?: string | null
     tag: string
     readingTime: number
     published?: boolean
     publishedAt?: Date | string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PostUpdateManyMutationInput = {
@@ -3640,11 +3907,15 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     excerpt?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     tag?: StringFieldUpdateOperationsInput | string
     readingTime?: IntFieldUpdateOperationsInput | number
     published?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PostUncheckedUpdateManyInput = {
@@ -3653,11 +3924,15 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     excerpt?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
+    contentJson?: NullableStringFieldUpdateOperationsInput | string | null
+    format?: StringFieldUpdateOperationsInput | string
+    coverImage?: NullableStringFieldUpdateOperationsInput | string | null
     tag?: StringFieldUpdateOperationsInput | string
     readingTime?: IntFieldUpdateOperationsInput | number
     published?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -3733,7 +4008,13 @@ export namespace Prisma {
     year?: SortOrder
     featured?: SortOrder
     order?: SortOrder
+    role?: SortOrder
+    duration?: SortOrder
+    status?: SortOrder
+    coverImage?: SortOrder
+    contentJson?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
@@ -3754,7 +4035,13 @@ export namespace Prisma {
     year?: SortOrder
     featured?: SortOrder
     order?: SortOrder
+    role?: SortOrder
+    duration?: SortOrder
+    status?: SortOrder
+    coverImage?: SortOrder
+    contentJson?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
@@ -3770,7 +4057,13 @@ export namespace Prisma {
     year?: SortOrder
     featured?: SortOrder
     order?: SortOrder
+    role?: SortOrder
+    duration?: SortOrder
+    status?: SortOrder
+    coverImage?: SortOrder
+    contentJson?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
@@ -3856,11 +4149,15 @@ export namespace Prisma {
     title?: SortOrder
     excerpt?: SortOrder
     content?: SortOrder
+    contentJson?: SortOrder
+    format?: SortOrder
+    coverImage?: SortOrder
     tag?: SortOrder
     readingTime?: SortOrder
     published?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PostAvgOrderByAggregateInput = {
@@ -3873,11 +4170,15 @@ export namespace Prisma {
     title?: SortOrder
     excerpt?: SortOrder
     content?: SortOrder
+    contentJson?: SortOrder
+    format?: SortOrder
+    coverImage?: SortOrder
     tag?: SortOrder
     readingTime?: SortOrder
     published?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PostMinOrderByAggregateInput = {
@@ -3886,11 +4187,15 @@ export namespace Prisma {
     title?: SortOrder
     excerpt?: SortOrder
     content?: SortOrder
+    contentJson?: SortOrder
+    format?: SortOrder
+    coverImage?: SortOrder
     tag?: SortOrder
     readingTime?: SortOrder
     published?: SortOrder
     publishedAt?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PostSumOrderByAggregateInput = {

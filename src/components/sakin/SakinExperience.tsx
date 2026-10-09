@@ -305,8 +305,13 @@ function Works({ projects }: { projects: Project[] }) {
               <p className="mt-4 font-soft text-sm opacity-45">
                 {p.tags.split(",").map((t) => t.trim()).join("  ·  ")}
               </p>
-              {(p.liveUrl ?? p.repoUrl) && (
-                <div className="mt-5 flex justify-center gap-6 font-soft text-[15px] italic">
+              <div className="mt-5 flex justify-center gap-6 font-soft text-[15px] italic">
+                  <Link
+                    href={`/sakin/projeler/${p.slug}`}
+                    className="border-b border-current/30 pb-0.5 transition-colors hover:border-current"
+                  >
+                    hikayesini oku
+                  </Link>
                   {p.liveUrl && (
                     <a
                       href={p.liveUrl}
@@ -328,7 +333,6 @@ function Works({ projects }: { projects: Project[] }) {
                     </a>
                   )}
                 </div>
-              )}
               {i < projects.length - 1 && (
                 <p className="mt-20 tracking-[1em] opacity-30" aria-hidden>
                   · · ·

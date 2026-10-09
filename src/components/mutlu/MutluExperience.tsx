@@ -330,8 +330,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         ))}
       </div>
 
-      {(project.liveUrl ?? project.repoUrl) && (
-        <div className="mt-6 flex gap-3">
+      <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href={`/mutlu/projeler/${project.slug}`}
+            className={cn(chunky, "rounded-xl bg-[#FF5A36] px-4 py-2 font-pop font-bold text-[#FFF1D6]")}
+          >
+            hikayesi →
+          </Link>
           {project.liveUrl && (
             <a
               href={project.liveUrl}
@@ -359,7 +364,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             </a>
           )}
         </div>
-      )}
     </motion.article>
   );
 }
@@ -376,7 +380,12 @@ function Projects({ projects }: { projects: Project[] }) {
             (hepsi çok sevgiyle)
           </span>
         </div>
-        <Squiggle stroke={C.sky} className="mt-4 h-6 w-56" />
+        <div className="mt-4 flex flex-wrap items-center gap-6">
+          <Squiggle stroke={C.sky} className="h-6 w-56" />
+          <Link href="/mutlu/projeler" className={cn(chunky, "rounded-xl bg-[#FFF1D6] px-4 py-1.5 font-pop font-bold")}>
+            hepsini gör →
+          </Link>
+        </div>
 
         <div className="mt-16 grid gap-12 md:grid-cols-2 md:gap-14">
           {projects.map((p, i) => (

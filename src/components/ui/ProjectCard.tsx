@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Code2, ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 import { cn } from "~/lib/utils";
 import type { RouterOutputs } from "~/trpc/react";
@@ -71,7 +72,13 @@ export function ProjectCard({
             </span>
           ))}
         </div>
-        <div className="mt-5 flex gap-5">
+        <div className="mt-5 flex flex-wrap gap-5">
+          <Link
+            href={`/projeler/${project.slug}`}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-magenta hover:underline"
+          >
+            Hikayesi →
+          </Link>
           {project.liveUrl && (
             <a
               href={project.liveUrl}

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Components } from "react-markdown";
 
-import { MarkdownContent } from "~/components/markdown/MarkdownContent";
 import { FlagIcon, GlobeIcon } from "~/components/nostaljik/icons";
 import { MenuBar, StatusCell } from "~/components/nostaljik/Window";
+import { w98Rich } from "~/components/nostaljik/rich";
 import { neighbours, type PostView } from "~/lib/posts";
+import { RichRenderer } from "~/lib/rich/render";
 import { SITE } from "~/lib/site";
 import { cn } from "~/lib/utils";
 
@@ -55,41 +55,6 @@ function Hr() {
   return <hr className="my-4 border-t-[#808080] border-b-white border-b" />;
 }
 
-const md: Components = {
-  h2: ({ children }) => (
-    <h2 className={cn(times, "mt-6 mb-2 text-[22px] font-bold text-[#000080]")}>{children}</h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className={cn(times, "mt-4 mb-2 text-[18px] font-bold")}>{children}</h3>
-  ),
-  p: ({ children }) => (
-    <p className={cn(times, "mb-3 text-[16px] leading-[1.45]")}>{children}</p>
-  ),
-  strong: ({ children }) => <b>{children}</b>,
-  ul: ({ children }) => (
-    <ul className={cn(times, "mb-3 list-disc pl-8 text-[16px] leading-[1.45]")}>{children}</ul>
-  ),
-  ol: ({ children }) => (
-    <ol className={cn(times, "mb-3 list-decimal pl-8 text-[16px] leading-[1.45]")}>{children}</ol>
-  ),
-  li: ({ children }) => <li className="mb-1">{children}</li>,
-  code: ({ children }) => (
-    <code className="font-['Courier_New',Courier,monospace] text-[14px]">{children}</code>
-  ),
-  pre: ({ children }) => (
-    <pre className="mb-3 overflow-x-auto border border-[#808080] bg-[#f0f0f0] p-2 font-['Courier_New',Courier,monospace] text-[13px] leading-[1.35]">
-      {children}
-    </pre>
-  ),
-  a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noreferrer" className="text-[#0000ee] underline visited:text-[#551a8b]">
-      {children}
-    </a>
-  ),
-  blockquote: ({ children }) => (
-    <blockquote className="mb-3 ml-8 italic">{children}</blockquote>
-  ),
-};
 
 /* ------------------------------------------------------------------ */
 
@@ -174,7 +139,7 @@ function HomePage({
   );
 }
 
-function PostPage({
+export function PostPage({
   post,
   posts,
   go,
@@ -222,7 +187,11 @@ function PostPage({
         {post.readingTime} dk
       </p>
       <Hr />
-      <MarkdownContent content={post.content} components={md} />
+      {post.coverImage && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={post.coverImage} alt="" className="mb-4 max-w-full border-2 border-[#808080]" />
+      )}
+      <RichRenderer doc={post.doc} components={w98Rich} />
       <Hr />
       {navRow}
     </div>
