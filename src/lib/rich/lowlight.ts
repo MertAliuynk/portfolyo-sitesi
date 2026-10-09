@@ -24,7 +24,31 @@ export const CODE_LANGUAGES: { id: string; label: string }[] = [
   { id: "plaintext", label: "Düz metin" },
 ];
 
+/** short names people write after ``` mapped to the list above */
+const ALIASES: Record<string, string> = {
+  ts: "typescript",
+  js: "javascript",
+  jsx: "tsx",
+  sh: "bash",
+  shell: "bash",
+  zsh: "bash",
+  html: "xml",
+  yml: "yaml",
+  py: "python",
+  md: "markdown",
+  cs: "csharp",
+  text: "plaintext",
+  txt: "plaintext",
+};
+
+export function normalizeLanguage(id: string | null | undefined) {
+  if (!id) return null;
+  const lower = id.toLowerCase();
+  return ALIASES[lower] ?? lower;
+}
+
 export function languageLabel(id: string | null | undefined) {
-  if (!id) return "Kod";
-  return CODE_LANGUAGES.find((l) => l.id === id)?.label ?? id;
+  const norm = normalizeLanguage(id);
+  if (!norm) return "Kod";
+  return CODE_LANGUAGES.find((l) => l.id === norm)?.label ?? id!;
 }

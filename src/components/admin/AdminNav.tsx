@@ -27,7 +27,7 @@ export function AdminNav() {
           <span className="block text-[15px] font-semibold tracking-tight">{SITE.shortName}</span>
         </Link>
 
-        <nav className="flex flex-1 gap-1 overflow-x-auto lg:flex-col">
+        <nav className="flex min-w-0 flex-1 gap-1 overflow-x-auto lg:flex-col">
           {LINKS.map(({ href, label, Icon, exact }) => {
             const active = exact ? pathname === href : pathname.startsWith(href);
             return (

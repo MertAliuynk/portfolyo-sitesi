@@ -2,10 +2,12 @@
 
 import { NodeViewContent, NodeViewWrapper, type NodeViewProps } from "@tiptap/react";
 
-import { CODE_LANGUAGES } from "~/lib/rich/lowlight";
+import { CODE_LANGUAGES, normalizeLanguage } from "~/lib/rich/lowlight";
 
 export function CodeBlockView({ node, updateAttributes, editor, getPos }: NodeViewProps) {
-  const language = (node.attrs.language as string | null) ?? "";
+  const raw = node.attrs.language as string | null;
+  const language = normalizeLanguage(raw) ?? "";
+  const known = !language || CODE_LANGUAGES.some((l) => l.id === language);
 
   return (
     <NodeViewWrapper className="code-block-view relative my-5">
@@ -22,6 +24,7 @@ export function CodeBlockView({ node, updateAttributes, editor, getPos }: NodeVi
           aria-label="Kod dili"
         >
           <option value="">Otomatik algıla</option>
+          {!known && <option value={language}>{raw}</option>}
           {CODE_LANGUAGES.map((l) => (
             <option key={l.id} value={l.id}>
               {l.label}

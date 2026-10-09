@@ -52,7 +52,7 @@ export function Dashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="min-w-0">
           <div className="flex items-center justify-between border-b border-[#f5f5f4] px-5 py-3.5">
             <h2 className="text-[14px] font-semibold">Son düzenlenen yazılar</h2>
             <Link href="/admin/yazilar" className="text-[12px] text-[#78716c] hover:text-[#1c1917]">
@@ -82,7 +82,7 @@ export function Dashboard() {
           )}
         </Card>
 
-        <Card>
+        <Card className="min-w-0">
           <div className="flex items-center justify-between border-b border-[#f5f5f4] px-5 py-3.5">
             <h2 className="text-[14px] font-semibold">Son düzenlenen projeler</h2>
             <Link href="/admin/projeler" className="text-[12px] text-[#78716c] hover:text-[#1c1917]">
