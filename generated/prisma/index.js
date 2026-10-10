@@ -88,6 +88,9 @@ Prisma.NullTypes = {
  * Enums
  */
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 });
 
@@ -133,6 +136,11 @@ exports.Prisma.PostScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
 };
 
 exports.Prisma.NullsOrder = {
@@ -183,7 +191,7 @@ const config = {
   "datasourceNames": [
     "db"
   ],
-  "activeProvider": "sqlite",
+  "activeProvider": "postgresql",
   "inlineDatasources": {
     "db": {
       "url": {
@@ -192,8 +200,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Project {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  summary     String\n  description String\n  tags        String\n  gradient    String\n  liveUrl     String?\n  repoUrl     String?\n  year        Int\n  featured    Boolean  @default(false)\n  order       Int      @default(0)\n  /// case-study details, edited from the admin panel\n  role        String?\n  duration    String?\n  status      String?\n  coverImage  String?\n  /// rich case study body (TipTap JSON)\n  contentJson String?\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@index([slug])\n}\n\nmodel Post {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  excerpt     String\n  /// legacy markdown body; posts written in the admin editor use contentJson\n  content     String   @default(\"\")\n  /// TipTap JSON document\n  contentJson String?\n  /// \"markdown\" for seeded posts, \"rich\" for editor posts\n  format      String   @default(\"markdown\")\n  coverImage  String?\n  tag         String\n  readingTime Int\n  published   Boolean  @default(true)\n  publishedAt DateTime @default(now())\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@index([slug])\n}\n",
-  "inlineSchemaHash": "d60f9d663e2de86108167b4647ba240df4b9ff9a288a4d1223369bbdc3ce81b3",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Project {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  summary     String\n  description String\n  tags        String\n  gradient    String\n  liveUrl     String?\n  repoUrl     String?\n  year        Int\n  featured    Boolean  @default(false)\n  order       Int      @default(0)\n  /// case-study details, edited from the admin panel\n  role        String?\n  duration    String?\n  status      String?\n  coverImage  String?\n  /// rich case study body (TipTap JSON)\n  contentJson String?\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@index([slug])\n}\n\nmodel Post {\n  id          String   @id @default(cuid())\n  slug        String   @unique\n  title       String\n  excerpt     String\n  /// legacy markdown body; posts written in the admin editor use contentJson\n  content     String   @default(\"\")\n  /// TipTap JSON document\n  contentJson String?\n  /// \"markdown\" for seeded posts, \"rich\" for editor posts\n  format      String   @default(\"markdown\")\n  coverImage  String?\n  tag         String\n  readingTime Int\n  published   Boolean  @default(true)\n  publishedAt DateTime @default(now())\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@index([slug])\n}\n",
+  "inlineSchemaHash": "b6a486fbc1e6b6011946cd6bd28b6b2e34684d6af77d5d7614303d0de3ae39fc",
   "copyEngine": true
 }
 
