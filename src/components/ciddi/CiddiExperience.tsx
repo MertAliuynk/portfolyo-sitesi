@@ -50,9 +50,15 @@ const CAPABILITIES = [
 ];
 
 const FIGURES = [
-  { value: "5+", label: "Yıl profesyonel deneyim" },
-  { value: "40+", label: "Teslim edilmiş proje" },
-  { value: "12", label: "Üretimde kullanılan teknoloji" },
+  { value: "4.", label: "Sınıf: mezuniyete son düzlük" },
+  { value: "12", label: "Düzenli kullandığım teknoloji" },
+  { value: "5", label: "Bu sitenin tasarım dili" },
+];
+
+const PROFILE = [
+  "Bilgisayar başında geçirdiğim zamanın büyük kısmı, okulda öğrendiklerimi gerçek projelerde sınamakla geçiyor. Teoriyi önemsiyorum; ama bir kavramı gerçekten anladığımı, onu çalışan bir şeye dönüştürebildiğimde hissediyorum.",
+  "Kod yazmayı bir zanaat olarak görüyorum. Çalışması yeterli değil; doğru isimlendirilmiş, sınırları net ve altı ay sonra açıldığında hâlâ anlaşılır olmalı.",
+  "Disiplinli çalışırım. Önce problemi tanımlar, sonra küçük ve doğrulanabilir adımlarla ilerlerim. Bilmediğim bir konuyla karşılaştığımda kaynağına inerim: dokümantasyon, kaynak kod ve deneme.",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -101,10 +107,10 @@ function Hero() {
           className="col-span-12 font-swiss text-lg leading-[1.55] sm:col-span-6 lg:col-span-5 lg:text-xl"
         >
           <p>
-            Ben {SITE.name}. TypeScript ve React ekosisteminde uzmanlaşmış bir
-            full-stack yazılım mühendisiyim. Ürün ekipleriyle sıfırdan bire
-            giden sistemler kuruyorum: API tasarımından arayüzün son pikseline
-            kadar.
+            Ben {SITE.name}. 4. sınıf öğrencisiyim ve web teknolojileri
+            üzerine yoğunlaşıyorum. TypeScript, React ve Next.js ile arayüzden
+            API&apos;ye uçtan uca uygulamalar geliştiriyor, her projede bir
+            öncekinden daha iyisini yapmak için çalışıyorum.
           </p>
         </Reveal>
         <Reveal
@@ -119,7 +125,7 @@ function Hero() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#E5381F] opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-[#E5381F]" />
                 </span>
-                Yeni projelere açık
+                Yeni fırsatlara açık
               </dd>
             </div>
             <div className="flex justify-between py-2.5">
@@ -127,8 +133,12 @@ function Hero() {
               <dd>{SITE.role}</dd>
             </div>
             <div className="flex justify-between py-2.5">
+              <dt className="text-[#6B6B6B]">Eğitim</dt>
+              <dd>4. sınıf öğrencisi</dd>
+            </div>
+            <div className="flex justify-between py-2.5">
               <dt className="text-[#6B6B6B]">Odak</dt>
-              <dd>Full-stack · Ürün mühendisliği</dd>
+              <dd>Full-stack web geliştirme</dd>
             </div>
             <div className="flex justify-between py-2.5">
               <dt className="text-[#6B6B6B]">Konum</dt>
@@ -165,7 +175,7 @@ function Profile() {
           delay={0.1}
           className="col-span-12 font-swiss text-[17px] leading-[1.65] text-[#2A2A2A] lg:col-span-7 lg:col-start-6 lg:columns-2 lg:gap-10"
         >
-          {SITE.manifesto.slice(0, 3).map((p) => (
+          {PROFILE.map((p) => (
             <p key={p} className="mb-5 break-inside-avoid">
               {p}
             </p>

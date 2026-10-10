@@ -22,9 +22,9 @@ export const soft = "[font-variation-settings:'SOFT'_100]";
 
 const LETTER = [
   "Bugün sakin hissettiğini söyledin. O yüzden sana bağırmayacağım, yanıp sönen hiçbir şey göstermeyeceğim. Bu sayfa yavaş okunmak için yazıldı.",
-  "Ben Mert. Yazılım mühendisiyim. Beş yılı aşkın süredir insanların her gün kullandığı şeyleri yapıyorum: bazen bir ödeme akışı, bazen bir panel, bazen kimsenin fark etmeyeceği ama olması gereken küçük bir detay.",
+  "Ben Mert. 4. sınıftayım. Günlerim dersler, ödevler ve gecenin sessiz saatlerinde yazdığım kodlar arasında geçiyor. Hızlı değilim belki, ama hiç bırakmıyorum; her gün biraz daha öğreniyorum.",
   "İşimde en çok sevdiğim şey sessizlik. İyi yazılmış kod sessizdir, kendini anlatmak için çabalamaz. İyi bir arayüz de öyle: ne yapacağını düşünmeden bilirsin.",
-  "Acelem olmadığında daha iyi çalışıyorum. Önce dinliyorum, sonra soruyorum, en son yazıyorum.",
+  "Çok çalışıyorum, ama koşturmadan. Acelem olmadığında daha iyi düşünüyorum: önce dinliyorum, sonra soruyorum, en son yazıyorum.",
 ];
 
 const SLOW_FACTS = [

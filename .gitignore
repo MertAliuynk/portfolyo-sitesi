@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# prisma client is generated on every install/build for the target OS
+/generated
+
 # database
 /uploads
 /prisma/db.sqlite

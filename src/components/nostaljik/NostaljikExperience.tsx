@@ -71,7 +71,7 @@ const BIOS_LINES = [
   "MertBIOS (C) 1998 Uyanık Megatrends, Inc.",
   "MERT-PC  Sürüm 5.0",
   "",
-  "İşlemci  : TypeScript 5.x, 5+ yıl çekirdek",
+  "İşlemci  : TypeScript 5.x, 4. sınıf öğrenci sürümü",
   "@MEMTEST",
   "",
   "Kahve sürücüsü yükleniyor ............ TAMAM",

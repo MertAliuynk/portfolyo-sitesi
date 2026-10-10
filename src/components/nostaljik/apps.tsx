@@ -224,8 +224,8 @@ export function SystemApp({ onClose }: { onClose: () => void }) {
               <div>
                 <p>Bilgisayar:</p>
                 <p className="pl-6">TypeScript İşlemci</p>
-                <p className="pl-6">5+ yıl deneyim</p>
-                <p className="pl-6">40+ proje belleği</p>
+                <p className="pl-6">4. sınıf öğrencisi</p>
+                <p className="pl-6">Sınırsız merak belleği</p>
                 <p className="pl-6">9.999 fincan kahve</p>
               </div>
             </div>

@@ -31,8 +31,8 @@ export function HorizontalFun() {
               Uyarı
             </p>
             <h2 className="font-display mt-4 max-w-lg text-3xl font-bold sm:text-5xl">
-              Buradan sonrası tamamen{" "}
-              <span className="text-gradient-warm">gereksiz ama harika.</span>
+              Buradan sonrası{" "}
+              <span className="text-gradient-warm">biraz farklı ama harika.</span>
             </h2>
             <p className="mt-6 text-sm text-paper/40">
               (yön birazdan değişecek — bu bir hata değil)

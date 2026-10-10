@@ -30,6 +30,9 @@ type Project = RouterOutputs["project"]["all"][number];
 
 /* ------------------------------------------------------------------ */
 
+const MUTLU_BIO =
+  "Selam! Ben Mert, 4. sınıftayım ve bilgisayarın başından kalkmayı hiç beceremiyorum. Bir şey çalıştığı an odada tek başıma 'yeees!' diye bağırıyorum (komşular alıştı sanırım). React, TypeScript, biraz Three.js... hepsiyle oynamaya bayılıyorum. Çok çalışıyorum ama inan bana, çoğu zaman eğlenmekten ayırt edemiyorum. Bu site de o oyunların en büyüğü!";
+
 const HELLO = ["S", "E", "L", "A", "M", "!"];
 const HELLO_COLORS = [C.tomato, C.sky, C.grass, C.pink, C.sun, C.lilac];
 
@@ -126,7 +129,7 @@ function Hero() {
         <span className="inline-block -rotate-2 rounded-lg border-[3px] border-[#1A1A1A] bg-[#FF5A36] px-2 text-[#FFF1D6]">
           Mert
         </span>
-        . Yazılım mühendisiyim ve bugün seninle aynı moddayım:{" "}
+        . 4. sınıftayım, gece gündüz kod yazıyorum ve bugün seninle aynı moddayım:{" "}
         <span className="relative inline-block whitespace-nowrap">
           aşırı mutlu
           <Squiggle
@@ -178,8 +181,10 @@ function Hero() {
       >
         <div className="relative">
           <Star fill={C.sun} className="w-full drop-shadow-[5px_5px_0_#1A1A1A]" />
-          <span className="absolute inset-0 grid place-items-center pt-2 font-pop text-xl font-extrabold">
-            5+ yıl
+          <span className="absolute inset-0 grid place-items-center pt-3 text-center font-pop text-base leading-none font-extrabold">
+            4.
+            <br />
+            sınıf
           </span>
         </div>
       </Sticker>
@@ -191,8 +196,8 @@ function Hero() {
       >
         <div className="grid h-32 w-32 place-items-center rounded-full border-[3px] border-[#1A1A1A] bg-[#4D9FFF] text-center font-pop leading-none font-extrabold shadow-[5px_5px_0_#1A1A1A]">
           <span>
-            <span className="block text-4xl">40+</span>
-            <span className="text-sm">proje</span>
+            <span className="block text-5xl">∞</span>
+            <span className="text-sm">merak</span>
           </span>
         </div>
       </Sticker>
@@ -440,7 +445,7 @@ function About() {
             </motion.div>
           </div>
           <p className="mt-8 font-pop text-xl leading-relaxed font-medium sm:text-2xl">
-            {SITE.bio}
+            {MUTLU_BIO}
           </p>
 
           <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
