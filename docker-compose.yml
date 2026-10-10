@@ -1,0 +1,17 @@
+# Local PostgreSQL for development: `pnpm db:up`, then `pnpm db:push`.
+# Production uses the PostgreSQL database created in Coolify instead.
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sahsisite
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
