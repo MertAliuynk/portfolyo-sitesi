@@ -241,9 +241,7 @@ export function MoodGate() {
 
         <footer className="font-swiss relative mt-auto flex flex-col gap-2 pt-10 text-[13px] opacity-55 sm:flex-row sm:items-end sm:justify-between">
           <p className="max-w-md">
-            {SITE.name}&apos;ın kişisel sitesi: projeler, blog yazıları ve küçük
-            oyunlar. Site, seçtiğin ruh haline göre baştan kurulur; fikrini
-            istediğin an değiştirebilirsin.
+            
           </p>
           <p className="flex gap-4">
             <span className="hidden sm:inline">
