@@ -95,12 +95,13 @@ export function Typing() {
 
       <div
         className={cn(
-          "relative cursor-text border bg-[#FAF9F6] p-6 sm:p-8",
+          // extra bottom room so the "start typing" hint never sits on the text
+          "relative cursor-text border bg-[#FAF9F6] p-6 pb-12 sm:p-8 sm:pb-12",
           focused ? "border-[#111]" : "border-[#111]/30",
         )}
         onClick={() => inputRef.current?.focus()}
       >
-        <p className="font-swiss text-[22px] leading-[1.7] break-words sm:text-[26px]" aria-hidden>
+        <p className="font-swiss text-[19px] leading-[1.7] break-words min-[420px]:text-[22px] sm:text-[26px]" aria-hidden>
           {text.split("").map((ch, i) => {
             const t = typed[i];
             const isCursor = i === typed.length && !done;

@@ -1,10 +1,9 @@
 import { CiddiExperience } from "~/components/ciddi/CiddiExperience";
+import { pageMeta } from "~/lib/seo";
 import { SITE } from "~/lib/site";
 import { api } from "~/trpc/server";
 
-export const metadata = {
-  title: `${SITE.name} — ${SITE.role}`,
-};
+export const metadata = pageMeta({ title: `${SITE.name} — ${SITE.role} · Ciddi mod`, canonical: "/ciddi" });
 
 export default async function CiddiPage() {
   const [projects, posts] = await Promise.all([

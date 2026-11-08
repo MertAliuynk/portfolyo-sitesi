@@ -11,7 +11,7 @@ export function GameShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative h-screen w-screen touch-none overflow-hidden bg-ink select-none">
+    <div className="relative h-[100svh] w-full touch-none overflow-hidden bg-ink select-none">
       <div className="pointer-events-none absolute inset-0 z-20 opacity-60 [background:repeating-linear-gradient(to_bottom,rgba(255,255,255,0.025)_0px,rgba(255,255,255,0.025)_1px,transparent_1px,transparent_3px)]" />
       <div className="absolute top-4 left-4 z-30 flex items-center gap-3">
         <Link

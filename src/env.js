@@ -10,6 +10,10 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     ADMIN_PASSWORD: z.string().min(8),
     AUTH_SECRET: z.string().min(32),
+    /** the code Google Search Console gives for the HTML-tag verification method */
+    GOOGLE_SITE_VERIFICATION: z.string().optional(),
+    /** "off" stops looking up visitor locations (the IP is then never sent anywhere) */
+    GEO_LOOKUP: z.enum(["on", "off"]).default("on"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -21,7 +25,8 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    /** public address of the site, e.g. https://mertaliuyanik.com — used for SEO (canonical, sitemap, OG) */
+    NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
   },
 
   /**
@@ -33,7 +38,9 @@ export const env = createEnv({
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
     AUTH_SECRET: process.env.AUTH_SECRET,
     NODE_ENV: process.env.NODE_ENV,
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    GOOGLE_SITE_VERIFICATION: process.env.GOOGLE_SITE_VERIFICATION,
+    GEO_LOOKUP: process.env.GEO_LOOKUP,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

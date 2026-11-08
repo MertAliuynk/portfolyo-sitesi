@@ -2,10 +2,16 @@
 
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import dynamic from "next/dynamic";
 
 import { SecretOrb } from "~/components/effects/SecretOrb";
-import { HeroScene } from "~/components/three/HeroScene";
 import { SITE } from "~/lib/site";
+
+// decorative WebGL: loads after the text is on screen, in its own chunk
+const HeroScene = dynamic(
+  () => import("~/components/three/HeroScene").then((m) => m.HeroScene),
+  { ssr: false },
+);
 
 const dots = [
   { top: "18%", left: "10%", size: "h-2 w-2", color: "bg-magenta/60", delay: 0 },

@@ -83,9 +83,11 @@ export const w98Rich: RichComponents = {
   ),
   hr: () => <hr className="my-4 border-t-[#808080] border-b border-b-white" />,
   table: ({ children }) => (
-    <table className={cn(times, "mb-3 border-collapse border-2 border-[#808080] text-[15px]")}>
-      <tbody>{children}</tbody>
-    </table>
+    <div className="mb-3 overflow-x-auto">
+      <table className={cn(times, "border-collapse border-2 border-[#808080] text-[15px]")}>
+        <tbody>{children}</tbody>
+      </table>
+    </div>
   ),
   tr: ({ children }) => <tr>{children}</tr>,
   th: ({ children, colSpan, rowSpan }) => (

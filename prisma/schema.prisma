@@ -58,3 +58,55 @@ model Post {
 
     @@index([slug])
 }
+
+/// One visit: a visitor's continuous stay on the site (a new one starts after
+/// 30 minutes of silence). Filled by /api/t, read in /admin/ziyaretciler.
+model VisitSession {
+    id          String       @id
+    /// random id kept in the visitor's browser, so returning visitors are recognised
+    visitorId   String
+    ip          String?
+    userAgent   String?
+    browser     String?
+    os          String?
+    /// "Mobil" | "Tablet" | "Masaüstü"
+    device      String?
+    country     String?
+    region      String?
+    city        String?
+    isp         String?
+    referrer    String?
+    utmSource   String?
+    language    String?
+    screen      String?
+    landingPath String
+    pageviews   Int          @default(0)
+    clicks      Int          @default(0)
+    startedAt   DateTime     @default(now())
+    lastSeenAt  DateTime     @default(now())
+    events      VisitEvent[]
+
+    @@index([startedAt])
+    @@index([lastSeenAt])
+    @@index([visitorId])
+}
+
+/// Something a visitor did: opened a page, clicked, scrolled.
+model VisitEvent {
+    id        String       @id @default(cuid())
+    sessionId String
+    session   VisitSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+    /// "pageview" | "click" | "scroll"
+    type      String
+    path      String
+    /// page title for pageviews, the visible text for clicks
+    label     String?
+    /// where a clicked link pointed
+    target    String?
+    /// scroll depth in percent
+    value     Int?
+    at        DateTime     @default(now())
+
+    @@index([sessionId, at])
+    @@index([type, at])
+}

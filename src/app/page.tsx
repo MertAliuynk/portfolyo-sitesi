@@ -1,10 +1,15 @@
 import { MoodGate } from "~/components/mood/MoodGate";
-import { SITE } from "~/lib/site";
+import { HOME_TITLE, JsonLd, pageMeta, personJsonLd, siteUrl, websiteJsonLd } from "~/lib/seo";
 
-export const metadata = {
-  title: `${SITE.name} — Bugün nasıl hissediyorsun?`,
-};
+export const metadata = pageMeta({ title: HOME_TITLE, canonical: "/" });
 
-export default function Home() {
-  return <MoodGate />;
+export default async function Home() {
+  const url = await siteUrl();
+  return (
+    <>
+      <JsonLd data={personJsonLd(url)} />
+      <JsonLd data={websiteJsonLd(url)} />
+      <MoodGate />
+    </>
+  );
 }

@@ -74,7 +74,7 @@ export const SITE = {
     { emoji: "🚀", label: "Deploy korkusu", value: "cuma günleri" },
   ],
   socials: [
-    { label: "GitHub", href: "https://github.com/mertaliuyanik" },
+    { label: "GitHub", href: "https://github.com/MertAliuynk" },
     { label: "LinkedIn", href: "https://linkedin.com/in/mertaliuyanik" },
     { label: "X / Twitter", href: "https://x.com/mertaliuyanik" },
   ],
@@ -94,3 +94,9 @@ export const KONAMI_CODE = [
 ];
 
 export const SECRET_ORB_CLICKS = 4;
+
+/**
+ * The driving world (/yolculuk) is still being built. While this is false
+ * the secret road under the mood gate is gone and the page answers 404.
+ */
+export const DRIVE_ENABLED = false;

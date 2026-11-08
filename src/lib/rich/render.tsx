@@ -71,10 +71,13 @@ export const baseComponents: RichComponents = {
     </figure>
   ),
   hr: () => <hr />,
+  // wide tables scroll sideways instead of stretching the page on phones
   table: ({ children }) => (
-    <table>
-      <tbody>{children}</tbody>
-    </table>
+    <div className="my-6 overflow-x-auto">
+      <table>
+        <tbody>{children}</tbody>
+      </table>
+    </div>
   ),
   tr: ({ children }) => <tr>{children}</tr>,
   th: ({ children, colSpan, rowSpan }) => (

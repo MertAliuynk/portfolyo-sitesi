@@ -60,7 +60,8 @@ export function TopBar({ fg }: { fg?: MotionValue<string> }) {
         <button
           type="button"
           onClick={toggle}
-          className="group flex items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
+          aria-label={`Yağmur sesi ${playing ? "açık" : "kapalı"}`}
+          className="group flex min-h-8 items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
         >
           <span className="flex h-3 items-end gap-[2px]" aria-hidden>
             {[0, 1, 2].map((i) => (

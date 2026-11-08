@@ -7,9 +7,11 @@
  * need to use are documented accordingly near the end.
  */
 import { initTRPC, TRPCError } from "@trpc/server";
+import { revalidateTag } from "next/cache";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
+import { CONTENT_TAG } from "~/server/content";
 import { db } from "~/server/db";
 import { tokenFromCookieHeader, verifySessionToken } from "~/server/session";
 
@@ -114,7 +116,10 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  * Admin-only procedure: requires a valid signed session cookie (set by the
  * /admin/giris login form).
  */
-export const adminProcedure = t.procedure.use(timingMiddleware).use(({ ctx, next }) => {
+export const adminProcedure = t.procedure.use(timingMiddleware).use(async ({ ctx, next, type }) => {
   if (!ctx.isAdmin) throw new TRPCError({ code: "UNAUTHORIZED" });
-  return next({ ctx });
+  const result = await next({ ctx });
+  // any successful edit refreshes the cached public pages
+  if (type === "mutation" && result.ok) revalidateTag(CONTENT_TAG);
+  return result;
 });

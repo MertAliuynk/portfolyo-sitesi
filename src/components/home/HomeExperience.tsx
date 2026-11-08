@@ -1,12 +1,13 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { CursorGlow } from "~/components/effects/CursorGlow";
 import { GrainOverlay } from "~/components/effects/GrainOverlay";
 import { KonamiListener } from "~/components/effects/KonamiListener";
 import { PortalTransition } from "~/components/effects/PortalTransition";
 import { ScrollProgress } from "~/components/effects/ScrollProgress";
 import { About } from "~/components/home/About";
-import { GamePortalReveal } from "~/components/home/GamePortalReveal";
 import { Hero } from "~/components/home/Hero";
 import { MoodChip } from "~/components/home/MoodChip";
 import { HorizontalFun } from "~/components/home/HorizontalFun";
@@ -16,6 +17,12 @@ import { SeriousIntro } from "~/components/home/SeriousIntro";
 import { TransitionDrop } from "~/components/home/TransitionDrop";
 import { ScrollTeaser } from "~/components/ui/ScrollTeaser";
 import type { RouterOutputs } from "~/trpc/react";
+
+// three.js scene near the bottom of the page: no need to ship it up front
+const GamePortalReveal = dynamic(
+  () => import("~/components/home/GamePortalReveal").then((m) => m.GamePortalReveal),
+  { ssr: false },
+);
 
 export function HomeExperience({
   projects,

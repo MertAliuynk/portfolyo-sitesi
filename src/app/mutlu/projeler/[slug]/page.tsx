@@ -2,20 +2,11 @@ import { notFound } from "next/navigation";
 
 import { MutluProject } from "~/components/mutlu/MutluProject";
 import { toProjectView } from "~/lib/projects";
-import { SITE } from "~/lib/site";
+import { projectMeta } from "~/lib/seo";
 import { api } from "~/trpc/server";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const project = await api.project.bySlug({ slug });
-  return {
-    title: project ? `${project.title.split("—")[0]!.trim()} — ${SITE.name}` : SITE.name,
-    description: project?.summary,
-  };
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  return projectMeta((await params).slug);
 }
 
 export default async function ProjectPage({

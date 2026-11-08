@@ -112,11 +112,12 @@ function Boot({ onDone }: { onDone: () => void }) {
   }, [onDone]);
 
   return (
-    <div className="fixed inset-0 z-[200] cursor-none bg-black p-6 font-dos text-[22px] leading-[1.15] text-[#c0c0c0] sm:p-10 sm:text-[26px]">
+    <div className="fixed inset-0 z-[200] cursor-none bg-black p-5 font-dos text-[15px] leading-[1.2] text-[#c0c0c0] min-[420px]:text-[18px] sm:p-10 sm:text-[26px] sm:leading-[1.15]">
       <div className="flex items-start justify-between">
-        <div>
+        <div className="min-w-0">
           {BIOS_LINES.slice(0, shown).map((line, i) => (
-            <p key={i} className="whitespace-pre">
+            // pre-wrap: keep the dot leaders, but wrap rather than run off a phone screen
+            <p key={i} className="break-words whitespace-pre-wrap">
               {line === "@MEMTEST"
                 ? `Bellek testi: ${mem}K ${mem >= 655360 ? "TAMAM" : ""}`
                 : line || " "}
@@ -129,8 +130,8 @@ function Boot({ onDone }: { onDone: () => void }) {
           <p className="mt-1 text-[20px]">Enerji dostu</p>
         </div>
       </div>
-      <p className="absolute bottom-6 left-6 text-[18px] sm:bottom-10 sm:left-10">
-        Atlamak için bir tuşa bas ya da tıkla
+      <p className="absolute right-5 bottom-6 left-5 text-[15px] sm:bottom-10 sm:left-10 sm:text-[18px]">
+        Atlamak için bir tuşa bas ya da dokun
       </p>
     </div>
   );

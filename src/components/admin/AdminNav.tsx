@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, FolderKanban, LayoutDashboard, LogOut, Newspaper } from "lucide-react";
+import { ExternalLink, FolderKanban, LayoutDashboard, LogOut, Newspaper, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/admin", label: "Pano", Icon: LayoutDashboard, exact: true },
   { href: "/admin/yazilar", label: "Yazılar", Icon: Newspaper },
   { href: "/admin/projeler", label: "Projeler", Icon: FolderKanban },
+  { href: "/admin/ziyaretciler", label: "Ziyaretçiler", Icon: Users },
 ];
 
 export function AdminNav() {

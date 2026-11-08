@@ -1,11 +1,14 @@
 import { BackHome } from "~/components/ui/BackHome";
 import { BlogCard } from "~/components/ui/BlogCard";
+import { pageMeta } from "~/lib/seo";
 import { SITE } from "~/lib/site";
 import { api, HydrateClient } from "~/trpc/server";
 
-export const metadata = {
+export const metadata = pageMeta({
   title: `Blog — ${SITE.name}`,
-};
+  description: `${SITE.name}'ın yazıları: yazılım, mühendislik, tasarım ve öğrencilikten notlar.`,
+  canonical: "/blog",
+});
 
 export default async function BlogPage() {
   const posts = await api.post.all();

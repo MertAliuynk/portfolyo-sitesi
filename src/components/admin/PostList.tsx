@@ -99,13 +99,20 @@ export function PostList() {
         ) : (
           <ul>
             {rows.map((p) => (
-              <li key={p.id} className="flex flex-wrap items-center gap-4 border-b border-[#f5f5f4] px-4 py-3 last:border-b-0">
-                <Link href={`/admin/yazilar/${p.id}`} className="flex min-w-0 flex-1 items-center gap-4">
+              <li
+                key={p.id}
+                className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-[#f5f5f4] px-4 py-3 last:border-b-0"
+              >
+                {/* on phones the title takes the whole first line; status and actions go below */}
+                <Link
+                  href={`/admin/yazilar/${p.id}`}
+                  className="flex min-w-0 flex-1 basis-full items-center gap-4 sm:basis-0"
+                >
                   {p.coverImage ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.coverImage} alt="" className="h-12 w-16 shrink-0 rounded-md object-cover" />
+                    <img src={p.coverImage} alt="" className="hidden h-12 w-16 shrink-0 rounded-md object-cover sm:block" />
                   ) : (
-                    <span className="grid h-12 w-16 shrink-0 place-items-center rounded-md bg-[#f5f5f4] text-[#d6d3d1]">
+                    <span className="hidden h-12 w-16 shrink-0 place-items-center rounded-md bg-[#f5f5f4] text-[#d6d3d1] sm:grid">
                       <PenLine className="h-4 w-4" />
                     </span>
                   )}
@@ -118,7 +125,7 @@ export function PostList() {
                   </span>
                 </Link>
                 {p.published ? <Badge tone="green">Yayında</Badge> : <Badge tone="amber">Taslak</Badge>}
-                <div className="flex items-center gap-1">
+                <div className="ml-auto flex items-center gap-1 sm:ml-0">
                   <Button
                     size="sm"
                     variant="ghost"
