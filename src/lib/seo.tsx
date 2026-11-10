@@ -5,6 +5,8 @@ import { headers } from "next/headers";
 
 import { env } from "~/env";
 import { SITE } from "~/lib/site";
+import { docFrom, wordCount } from "~/lib/rich/extract";
+import { finalDescription, finalTitle, LEVELS } from "~/lib/seo-check";
 import { getPost, getProject } from "~/server/content";
 
 /**
@@ -47,10 +49,13 @@ export const SEO_KEYWORDS = [
 
 /** Public origin, without a trailing slash. Prefers NEXT_PUBLIC_SITE_URL, else the request host. */
 export async function siteUrl() {
-  if (env.NEXT_PUBLIC_SITE_URL) return env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, "");
+  if (env.NEXT_PUBLIC_SITE_URL)
+    return env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, "");
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  const proto =
+    h.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") ? "http" : "https");
   return `${proto}://${host}`;
 }
 
@@ -76,7 +81,15 @@ export function pageMeta(o: {
   return {
     title: { absolute: o.title },
     description,
-    alternates: { canonical: o.canonical },
+    alternates: {
+      canonical: o.canonical,
+      // lets feed readers and crawlers find new posts
+      types: {
+        "application/rss+xml": [
+          { url: "/blog/rss.xml", title: `${SITE.name} — Blog` },
+        ],
+      },
+    },
     openGraph: {
       type: o.type ?? "website",
       locale: "tr_TR",
@@ -94,7 +107,12 @@ export function pageMeta(o: {
           }
         : {}),
     },
-    twitter: { card: "summary_large_image", title: o.title, description, images },
+    twitter: {
+      card: "summary_large_image",
+      title: o.title,
+      description,
+      images,
+    },
     ...(o.noindex ? { robots: { index: false, follow: true } } : {}),
   };
 }
@@ -103,22 +121,29 @@ export function pageMeta(o: {
 export async function postMeta(slug: string): Promise<Metadata> {
   const post = await getPost(slug);
   if (!post) return { title: { absolute: `Yazı bulunamadı — ${SITE.name}` } };
-  return pageMeta({
-    title: `${post.title} — ${SITE.name}`,
-    description: post.excerpt,
+  const meta = pageMeta({
+    title: finalTitle(post),
+    description: finalDescription(post),
     canonical: `/blog/${post.slug}`,
     image: post.coverImage,
     type: "article",
     publishedTime: post.publishedAt,
     modifiedTime: post.updatedAt,
-    tags: [post.tag],
+    tags: [post.tag, ...(post.focusKeyword ? [post.focusKeyword] : [])],
   });
+  return {
+    ...meta,
+    keywords: [post.focusKeyword, post.tag, SITE.name].filter(
+      (k): k is string => !!k,
+    ),
+  };
 }
 
 /** a project's metadata, whichever mood's copy of it is being rendered */
 export async function projectMeta(slug: string): Promise<Metadata> {
   const project = await getProject(slug);
-  if (!project) return { title: { absolute: `Proje bulunamadı — ${SITE.name}` } };
+  if (!project)
+    return { title: { absolute: `Proje bulunamadı — ${SITE.name}` } };
   const name = project.title.split("—")[0]!.trim();
   return pageMeta({
     title: `${name} — ${SITE.name} projesi`,
@@ -165,30 +190,86 @@ export function websiteJsonLd(url: string) {
   };
 }
 
-export function blogPostingJsonLd(
+/**
+ * A post as a TechArticle (the schema.org type for tutorials and technical
+ * write-ups) plus the breadcrumb trail Google shows above the result.
+ */
+export function postJsonLd(
   url: string,
-  post: { slug: string; title: string; excerpt: string; coverImage: string | null; publishedAt: Date; updatedAt: Date; tag: string },
+  post: {
+    slug: string;
+    title: string;
+    excerpt: string;
+    seoDescription: string | null;
+    coverImage: string | null;
+    publishedAt: Date;
+    updatedAt: Date;
+    tag: string;
+    focusKeyword: string | null;
+    level: string | null;
+    readingTime: number;
+    format: string | null;
+    content: string;
+    contentJson: string | null;
+  },
 ) {
-  return {
+  const page = `${url}/blog/${post.slug}`;
+  const doc = docFrom(post);
+  const level = LEVELS.find((l) => l.id === post.level);
+  const article = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
-    url: `${url}/blog/${post.slug}`,
-    mainEntityOfPage: `${url}/blog/${post.slug}`,
+    "@type": "TechArticle",
+    "@id": `${page}#article`,
+    headline: post.title.slice(0, 110),
+    description: finalDescription(post),
+    url: page,
+    mainEntityOfPage: { "@type": "WebPage", "@id": page },
     datePublished: post.publishedAt.toISOString(),
     dateModified: post.updatedAt.toISOString(),
-    image: post.coverImage ? new URL(post.coverImage, url).toString() : `${url}/opengraph-image`,
-    keywords: post.tag,
+    image: post.coverImage
+      ? new URL(post.coverImage, url).toString()
+      : `${url}/opengraph-image`,
+    articleSection: post.tag,
+    keywords: [post.focusKeyword, post.tag].filter(Boolean).join(", "),
+    wordCount: wordCount(doc),
+    timeRequired: `PT${post.readingTime}M`,
+    ...(level
+      ? { proficiencyLevel: level.schema, educationalLevel: level.label }
+      : {}),
     inLanguage: "tr-TR",
-    author: { "@type": "Person", "@id": `${url}/#person`, name: SITE.name, url },
+    isAccessibleForFree: true,
+    author: {
+      "@type": "Person",
+      "@id": `${url}/#person`,
+      name: SITE.name,
+      url,
+    },
     publisher: { "@type": "Person", "@id": `${url}/#person`, name: SITE.name },
   };
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE.name, item: `${url}/` },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${url}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: page },
+    ],
+  };
+  return [article, breadcrumb];
 }
 
 export function projectJsonLd(
   url: string,
-  project: { slug: string; title: string; summary: string; tags: string; year: number; coverImage: string | null; liveUrl: string | null; repoUrl: string | null },
+  project: {
+    slug: string;
+    title: string;
+    summary: string;
+    tags: string;
+    year: number;
+    coverImage: string | null;
+    liveUrl: string | null;
+    repoUrl: string | null;
+  },
 ) {
   return {
     "@context": "https://schema.org",
@@ -198,10 +279,17 @@ export function projectJsonLd(
     url: `${url}/projeler/${project.slug}`,
     dateCreated: String(project.year),
     keywords: project.tags,
-    image: project.coverImage ? new URL(project.coverImage, url).toString() : undefined,
+    image: project.coverImage
+      ? new URL(project.coverImage, url).toString()
+      : undefined,
     sameAs: [project.liveUrl, project.repoUrl].filter(Boolean),
     inLanguage: "tr-TR",
-    creator: { "@type": "Person", "@id": `${url}/#person`, name: SITE.name, url },
+    creator: {
+      "@type": "Person",
+      "@id": `${url}/#person`,
+      name: SITE.name,
+      url,
+    },
   };
 }
 
@@ -210,7 +298,9 @@ export function JsonLd({ data }: { data: object }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
     />
   );
 }

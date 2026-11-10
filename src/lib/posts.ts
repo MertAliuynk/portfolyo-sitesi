@@ -15,6 +15,13 @@ export interface PostView {
   readingTime: number;
   date: string;
   dateLong: string;
+  /** ISO timestamps for <time dateTime> */
+  publishedIso: string;
+  /** set when the post was edited more than a day after it went out */
+  updatedLong: string | null;
+  updatedIso: string | null;
+  /** tutorial difficulty, if the post has one */
+  level: "baslangic" | "orta" | "ileri" | null;
 }
 
 export function formatDate(d: Date) {
@@ -44,7 +51,17 @@ export function toPostView(p: {
   tag: string;
   readingTime: number;
   publishedAt: Date;
+  updatedAt?: Date;
+  level?: string | null;
 }): PostView {
+  const edited =
+    p.updatedAt && p.updatedAt.getTime() - p.publishedAt.getTime() > 86_400_000
+      ? p.updatedAt
+      : null;
+  const level =
+    p.level === "baslangic" || p.level === "orta" || p.level === "ileri"
+      ? p.level
+      : null;
   return {
     slug: p.slug,
     title: p.title,
@@ -55,11 +72,18 @@ export function toPostView(p: {
     readingTime: p.readingTime,
     date: formatDate(p.publishedAt),
     dateLong: formatDateLong(p.publishedAt),
+    publishedIso: p.publishedAt.toISOString(),
+    updatedLong: edited ? formatDateLong(edited) : null,
+    updatedIso: edited ? edited.toISOString() : null,
+    level,
   };
 }
 
 /** Previous (newer) and next (older) neighbours in a list. */
-export function neighbours<T extends { slug: string }>(list: T[], slug: string) {
+export function neighbours<T extends { slug: string }>(
+  list: T[],
+  slug: string,
+) {
   const i = list.findIndex((p) => p.slug === slug);
   return {
     prev: i > 0 ? list[i - 1] : undefined,

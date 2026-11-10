@@ -51,6 +51,14 @@ model Post {
     coverImage  String?
     tag         String
     readingTime Int
+    /// search: overrides "<title> — <name>" in the browser tab and Google
+    seoTitle       String?
+    /// search: the snippet under the link; falls back to the excerpt
+    seoDescription String?
+    /// the phrase this post should be found for, checked in the editor
+    focusKeyword   String?
+    /// tutorial difficulty: "baslangic" | "orta" | "ileri"
+    level          String?
     published   Boolean  @default(true)
     publishedAt DateTime @default(now())
     createdAt   DateTime @default(now())

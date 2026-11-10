@@ -1,19 +1,44 @@
 "use client";
 
 import type { JSONContent } from "@tiptap/core";
-import { ArrowLeft, Eye, ExternalLink, Loader2, Save, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Eye,
+  ExternalLink,
+  GraduationCap,
+  Loader2,
+  Save,
+  Trash2,
+} from "lucide-react";
 import { marked } from "marked";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { RichEditor, type EditorStats } from "~/components/admin/editor/RichEditor";
+import {
+  RichEditor,
+  type EditorStats,
+} from "~/components/admin/editor/RichEditor";
 import { CoverField, toLocalInput } from "~/components/admin/fields";
-import { PreviewPanel, type PreviewData } from "~/components/admin/PreviewPanel";
-import { Badge, Button, Card, Field, Input, Textarea, Toggle } from "~/components/admin/ui";
+import {
+  PreviewPanel,
+  type PreviewData,
+} from "~/components/admin/PreviewPanel";
+import { SeoPanel } from "~/components/admin/SeoPanel";
+import {
+  Badge,
+  Button,
+  Card,
+  Field,
+  Input,
+  Textarea,
+  Toggle,
+} from "~/components/admin/ui";
 import { formatDate, formatDateLong } from "~/lib/posts";
 import { readingMinutes, slugify } from "~/lib/rich/extract";
+import { markdownToDoc } from "~/lib/rich/markdown";
 import type { RichNode } from "~/lib/rich/types";
+import { LESSON_TEMPLATE } from "~/lib/seo-check";
 import { api } from "~/trpc/react";
 
 interface Draft {
@@ -27,6 +52,10 @@ interface Draft {
   coverImage: string | null;
   published: boolean;
   publishedAt: Date;
+  seoTitle: string;
+  seoDescription: string;
+  focusKeyword: string;
+  level: string;
 }
 
 const EMPTY: Draft = {
@@ -40,10 +69,25 @@ const EMPTY: Draft = {
   coverImage: null,
   published: false,
   publishedAt: new Date(),
+  seoTitle: "",
+  seoDescription: "",
+  focusKeyword: "",
+  level: "",
 };
 
+/** true when the editor holds nothing but empty paragraphs */
+function isEmptyDoc(doc: JSONContent | null) {
+  if (!doc) return true;
+  return (doc.content ?? []).every(
+    (n) => n.type === "paragraph" && !n.content?.length,
+  );
+}
+
 function errorText(err: unknown) {
-  const e = err as { data?: { zodError?: { fieldErrors?: Record<string, string[]> } }; message?: string };
+  const e = err as {
+    data?: { zodError?: { fieldErrors?: Record<string, string[]> } };
+    message?: string;
+  };
   const fields = e.data?.zodError?.fieldErrors;
   if (fields) {
     const first = Object.values(fields).flat()[0];
@@ -55,17 +99,23 @@ function errorText(err: unknown) {
 export function PostEditor({ id }: { id: string | null }) {
   const router = useRouter();
   const utils = api.useUtils();
-  const query = api.admin.post.useQuery({ id: id ?? "" }, { enabled: !!id, refetchOnWindowFocus: false });
+  const query = api.admin.post.useQuery(
+    { id: id ?? "" },
+    { enabled: !!id, refetchOnWindowFocus: false },
+  );
   const tags = api.admin.tags.useQuery();
 
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [doc, setDoc] = useState<JSONContent | null>(null);
-  const [initial, setInitial] = useState<JSONContent | string | null>(id ? null : "");
+  const [initial, setInitial] = useState<JSONContent | string | null>(
+    id ? null : "",
+  );
   const [dirty, setDirty] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<Date | null>(null);
   const [preview, setPreview] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [editorKey, setEditorKey] = useState(0);
   const titleRef = useRef<HTMLTextAreaElement>(null);
 
   // hydrate from the server once
@@ -83,6 +133,10 @@ export function PostEditor({ id }: { id: string | null }) {
       coverImage: p.coverImage,
       published: p.published,
       publishedAt: p.publishedAt,
+      seoTitle: p.seoTitle ?? "",
+      seoDescription: p.seoDescription ?? "",
+      focusKeyword: p.focusKeyword ?? "",
+      level: p.level ?? "",
     });
     const content = p.contentJson
       ? (JSON.parse(p.contentJson) as JSONContent)
@@ -90,24 +144,38 @@ export function PostEditor({ id }: { id: string | null }) {
         ? marked.parse(p.content, { async: false, gfm: true })
         : "";
     setInitial(content);
-    if (typeof content !== "string") setDoc(content);
+    // legacy markdown posts: give the SEO checks a tree to look at until the editor reports one
+    setDoc(
+      typeof content !== "string"
+        ? content
+        : (markdownToDoc(p.content)),
+    );
     setSavedAt(p.updatedAt);
   }, [query.data]);
 
-  const update = useCallback(<K extends keyof Draft>(key: K, value: Draft[K]) => {
-    setDraft((d) => {
-      const next = { ...d, [key]: value };
-      if (key === "title" && !d.slugTouched) next.slug = slugify(value as string);
-      return next;
-    });
-    setDirty(true);
-  }, []);
+  const update = useCallback(
+    <K extends keyof Draft>(key: K, value: Draft[K]) => {
+      setDraft((d) => {
+        const next = { ...d, [key]: value };
+        if (key === "title" && !d.slugTouched)
+          next.slug = slugify(value as string);
+        return next;
+      });
+      setDirty(true);
+    },
+    [],
+  );
 
-  const onEditorChange = useCallback((json: JSONContent, stats: EditorStats) => {
-    setDoc(json);
-    setDirty(true);
-    setDraft((d) => (d.autoReading ? { ...d, readingTime: stats.minutes } : d));
-  }, []);
+  const onEditorChange = useCallback(
+    (json: JSONContent, stats: EditorStats) => {
+      setDoc(json);
+      setDirty(true);
+      setDraft((d) =>
+        d.autoReading ? { ...d, readingTime: stats.minutes } : d,
+      );
+    },
+    [],
+  );
 
   // grow the title box with its content
   useEffect(() => {
@@ -126,17 +194,26 @@ export function PostEditor({ id }: { id: string | null }) {
     async (publish?: boolean) => {
       setError(null);
       const published = publish ?? draft.published;
-      const contentDoc = doc ?? { type: "doc", content: [{ type: "paragraph" }] };
+      const contentDoc = doc ?? {
+        type: "doc",
+        content: [{ type: "paragraph" }],
+      };
       const input = {
         title: draft.title,
         slug: draft.slug || slugify(draft.title),
         excerpt: draft.excerpt,
         tag: draft.tag,
-        readingTime: draft.autoReading ? readingMinutes(contentDoc as RichNode) : draft.readingTime,
+        readingTime: draft.autoReading
+          ? readingMinutes(contentDoc as RichNode)
+          : draft.readingTime,
         contentJson: JSON.stringify(contentDoc),
         coverImage: draft.coverImage,
         published,
         publishedAt: draft.publishedAt,
+        seoTitle: draft.seoTitle.trim() || null,
+        seoDescription: draft.seoDescription.trim() || null,
+        focusKeyword: draft.focusKeyword.trim() || null,
+        level: (draft.level || null) as "baslangic" | "orta" | "ileri" | null,
       };
       try {
         if (id) {
@@ -191,6 +268,10 @@ export function PostEditor({ id }: { id: string | null }) {
         readingTime: draft.readingTime,
         date: formatDate(draft.publishedAt),
         dateLong: formatDateLong(draft.publishedAt),
+        publishedIso: draft.publishedAt.toISOString(),
+        updatedLong: null,
+        updatedIso: null,
+        level: (draft.level || null) as "baslangic" | "orta" | "ileri" | null,
       },
     }),
     [draft, doc],
@@ -211,13 +292,29 @@ export function PostEditor({ id }: { id: string | null }) {
     <div>
       {/* top bar */}
       <div className="sticky top-0 z-30 -mx-4 mb-6 flex flex-wrap items-center gap-2 border-b border-[#e7e5e4] bg-[#f6f5f2]/90 px-4 py-3 backdrop-blur sm:-mx-8 sm:px-8">
-        <Link href="/admin/yazilar" className="mr-1 rounded-lg p-1.5 text-[#78716c] hover:bg-white hover:text-[#1c1917]" aria-label="Yazılara dön">
+        <Link
+          href="/admin/yazilar"
+          className="mr-1 rounded-lg p-1.5 text-[#78716c] hover:bg-white hover:text-[#1c1917]"
+          aria-label="Yazılara dön"
+        >
           <ArrowLeft className="h-4 w-4" />
         </Link>
-        <span className="text-[14px] font-semibold">{id ? "Yazıyı düzenle" : "Yeni yazı"}</span>
-        {draft.published ? <Badge tone="green">Yayında</Badge> : <Badge tone="amber">Taslak</Badge>}
+        <span className="text-[14px] font-semibold">
+          {id ? "Yazıyı düzenle" : "Yeni yazı"}
+        </span>
+        {draft.published ? (
+          <Badge tone="green">Yayında</Badge>
+        ) : (
+          <Badge tone="amber">Taslak</Badge>
+        )}
         <span className="text-[12px] text-[#a8a29e]">
-          {saving ? "Kaydediliyor…" : dirty ? "Kaydedilmemiş değişiklikler" : savedAt ? "Kaydedildi" : ""}
+          {saving
+            ? "Kaydediliyor…"
+            : dirty
+              ? "Kaydedilmemiş değişiklikler"
+              : savedAt
+                ? "Kaydedildi"
+                : ""}
         </span>
         <div className="ml-auto flex flex-wrap gap-2">
           <Button onClick={() => setPreview(true)}>
@@ -228,14 +325,21 @@ export function PostEditor({ id }: { id: string | null }) {
               Yayınla
             </Button>
           )}
-          <Button variant="primary" onClick={() => void submit()} loading={saving}>
+          <Button
+            variant="primary"
+            onClick={() => void submit()}
+            loading={saving}
+          >
             <Save className="h-4 w-4" /> Kaydet
           </Button>
         </div>
       </div>
 
       {error && (
-        <p role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-[13px] text-red-700">
+        <p
+          role="alert"
+          className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-[13px] text-red-700"
+        >
           {error}
         </p>
       )}
@@ -257,8 +361,34 @@ export function PostEditor({ id }: { id: string | null }) {
             rows={2}
             maxLength={500}
           />
+          {!id && isEmptyDoc(doc) && (
+            <button
+              type="button"
+              onClick={() => {
+                setInitial(LESSON_TEMPLATE);
+                setDoc(LESSON_TEMPLATE);
+                setEditorKey((k) => k + 1);
+                setDirty(true);
+              }}
+              className="flex w-full items-center gap-3 rounded-xl border border-dashed border-[#d6d3d1] bg-white px-4 py-3 text-left text-[13px] transition hover:border-[#1c1917]"
+            >
+              <GraduationCap className="h-5 w-5 shrink-0 text-[#78716c]" />
+              <span>
+                <span className="font-medium">Ders şablonuyla başla</span>
+                <span className="block text-[12px] text-[#a8a29e]">
+                  Giriş, kazanımlar, adım adım anlatım, sık yapılan hatalar ve
+                  özet hazır gelir.
+                </span>
+              </span>
+            </button>
+          )}
           {initial !== null && (
-            <RichEditor key={id ?? "new"} initial={initial} onChange={onEditorChange} stickyTop={61} />
+            <RichEditor
+              key={`${id ?? "new"}-${editorKey}`}
+              initial={initial}
+              onChange={onEditorChange}
+              stickyTop={61}
+            />
           )}
         </div>
 
@@ -269,13 +399,20 @@ export function PostEditor({ id }: { id: string | null }) {
               checked={draft.published}
               onChange={(v) => update("published", v)}
               label={draft.published ? "Yayında" : "Taslak"}
-              description={draft.published ? "Ziyaretçiler bu yazıyı görüyor." : "Sadece sen görebilirsin."}
+              description={
+                draft.published
+                  ? "Ziyaretçiler bu yazıyı görüyor."
+                  : "Sadece sen görebilirsin."
+              }
             />
             <Field label="Yayın tarihi">
               <Input
                 type="datetime-local"
                 value={toLocalInput(draft.publishedAt)}
-                onChange={(e) => e.target.value && update("publishedAt", new Date(e.target.value))}
+                onChange={(e) =>
+                  e.target.value &&
+                  update("publishedAt", new Date(e.target.value))
+                }
               />
             </Field>
           </Card>
@@ -283,16 +420,31 @@ export function PostEditor({ id }: { id: string | null }) {
           <Card className="space-y-4 p-4">
             <h3 className="text-[13px] font-semibold">Ayrıntılar</h3>
             <Field label="Konu" hint="Örn. Mühendislik, Tasarım, Kariyer">
-              <Input list="post-tags" value={draft.tag} onChange={(e) => update("tag", e.target.value)} placeholder="Konu seç ya da yaz" />
+              <Input
+                list="post-tags"
+                value={draft.tag}
+                onChange={(e) => update("tag", e.target.value)}
+                placeholder="Konu seç ya da yaz"
+              />
               <datalist id="post-tags">
-                {tags.data?.map((t) => <option key={t} value={t} />)}
+                {tags.data?.map((t) => (
+                  <option key={t} value={t} />
+                ))}
               </datalist>
             </Field>
-            <Field label="Adres (kısa ad)" hint={`/…/blog/${draft.slug || "kisa-ad"}`}>
+            <Field
+              label="Adres (kısa ad)"
+              hint={`/…/blog/${draft.slug || "kisa-ad"}`}
+            >
               <Input
                 value={draft.slug}
                 onChange={(e) => {
-                  setDraft((d) => ({ ...d, slug: slugify(e.target.value) || e.target.value.toLowerCase(), slugTouched: true }));
+                  setDraft((d) => ({
+                    ...d,
+                    slug:
+                      slugify(e.target.value) || e.target.value.toLowerCase(),
+                    slugTouched: true,
+                  }));
                   setDirty(true);
                 }}
                 placeholder="baslik-gibi-yazilir"
@@ -306,7 +458,12 @@ export function PostEditor({ id }: { id: string | null }) {
                   max={240}
                   value={draft.readingTime}
                   disabled={draft.autoReading}
-                  onChange={(e) => update("readingTime", Math.max(1, Number(e.target.value) || 1))}
+                  onChange={(e) =>
+                    update(
+                      "readingTime",
+                      Math.max(1, Number(e.target.value) || 1),
+                    )
+                  }
                   className="w-24"
                 />
                 <label className="flex items-center gap-1.5 text-[12px] text-[#57534e]">
@@ -322,9 +479,18 @@ export function PostEditor({ id }: { id: string | null }) {
             </Field>
           </Card>
 
+          <SeoPanel
+            draft={draft}
+            doc={(doc ?? { type: "doc", content: [] }) as RichNode}
+            onChange={(key, value) => update(key, value)}
+          />
+
           <Card className="space-y-3 p-4">
             <h3 className="text-[13px] font-semibold">Kapak görseli</h3>
-            <CoverField value={draft.coverImage} onChange={(v) => update("coverImage", v)} />
+            <CoverField
+              value={draft.coverImage}
+              onChange={(v) => update("coverImage", v)}
+            />
           </Card>
 
           {id && draft.published && (
@@ -337,7 +503,13 @@ export function PostEditor({ id }: { id: string | null }) {
                   ["Sakin", `/sakin/blog/${draft.slug}`],
                   ["Meraklı", `/blog/${draft.slug}`],
                 ].map(([label, href]) => (
-                  <a key={label} href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[#2563eb] hover:underline">
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[#2563eb] hover:underline"
+                  >
                     {label} <ExternalLink className="h-3 w-3" />
                   </a>
                 ))}
@@ -349,7 +521,9 @@ export function PostEditor({ id }: { id: string | null }) {
             <Card className="p-4">
               {confirmDelete ? (
                 <div className="space-y-2">
-                  <p className="text-[13px]">Bu yazı kalıcı olarak silinecek. Emin misin?</p>
+                  <p className="text-[13px]">
+                    Bu yazı kalıcı olarak silinecek. Emin misin?
+                  </p>
                   <div className="flex gap-2">
                     <Button
                       variant="danger"
@@ -364,13 +538,20 @@ export function PostEditor({ id }: { id: string | null }) {
                     >
                       Evet, sil
                     </Button>
-                    <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setConfirmDelete(false)}
+                    >
                       Vazgeç
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button variant="danger" onClick={() => setConfirmDelete(true)} className="w-full">
+                <Button
+                  variant="danger"
+                  onClick={() => setConfirmDelete(true)}
+                  className="w-full"
+                >
                   <Trash2 className="h-4 w-4" /> Yazıyı sil
                 </Button>
               )}
@@ -379,7 +560,9 @@ export function PostEditor({ id }: { id: string | null }) {
         </aside>
       </div>
 
-      {preview && <PreviewPanel data={previewData} onClose={() => setPreview(false)} />}
+      {preview && (
+        <PreviewPanel data={previewData} onClose={() => setPreview(false)} />
+      )}
     </div>
   );
 }
